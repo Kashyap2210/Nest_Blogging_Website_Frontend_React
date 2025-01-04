@@ -1,11 +1,12 @@
 import { useState } from "react";
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
+import { IUserEntity, IUserLoginResponse } from "blog-common-1.0";
 
 export default function Login() {
   const [formData, setFormData] = useState({ username: "", password: "" });
   const [responseMessage, setResponseMessage] = useState(""); // State to store backend response message
   const [errorMessage, setErrorMessage] = useState(""); // State to store error message
-  const [user, setUser] = useState(null); // State to store user information
+  const [user, setUser] = useState<IUserEntity | null>(null); // State to store user information
   const [accessToken, setAccessToken] = useState(""); // State to store access token
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -22,11 +23,11 @@ export default function Login() {
 
     try {
       // Send a POST request to the backend
-      const response = await axios.post("http://localhost:3000/api/auth/login", formData);
+      const response : AxiosResponse<IUserLoginResponse> = await axios.post("http://localhost:3000/api/auth/login", formData);
       console.log("Backend Response: ", response.data);
-
       // Destructure response to get accessToken and user data
       const { accessToken, user } = response.data;
+      console.log("this is the user", user.emailId)
 
       // Set the backend response data in state
       setAccessToken(accessToken); // Store the accessToken
