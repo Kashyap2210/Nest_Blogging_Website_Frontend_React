@@ -1,3 +1,4 @@
+import BlogCreate from './BlogCreate';
 import Login from './Login';
 import UserCreate from './UserCreate';
 
@@ -13,6 +14,15 @@ export default function BlogGrandContainer() {
       <br />
       <br />
       <Login />
+      <br />
+      <br />
+      <br />
+      <hr />
+      <BlogCreate />
+      <br />
+      <br />
+      <br />
+      <hr />
     </>
   );
 }
