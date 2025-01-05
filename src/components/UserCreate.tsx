@@ -1,6 +1,6 @@
 // import React from "react"
 
-import axios, { AxiosError, AxiosResponse } from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import { IUserCreateDto, IUserEntity, UserGender } from 'blog-common-1.0';
 import { useState } from 'react';
 
