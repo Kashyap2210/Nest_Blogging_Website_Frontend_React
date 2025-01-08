@@ -7,9 +7,8 @@ export default function Login() {
   const [formData, setFormData] = useState({ username: '', password: '' });
   const [responseMessage, setResponseMessage] = useState(''); // State to store backend response message
   const [errorMessage, setErrorMessage] = useState(''); // State to store error message
-  // const [user, setUser] = useState<IUserEntity | null>(null); // State to store user information
-  // const [accessToken, setAccessToken] = useState(""); // State to store access token
-  const { login, user, accessToken } = useAuth(); // Destructure login, user, and accessToken from context
+
+  const { login, user, accessToken } = useAuth(); 
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;

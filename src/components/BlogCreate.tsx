@@ -13,7 +13,7 @@ export default function BlogCreate() {
   });
   const [newBlog, setNewBlog] = useState<IBlogCreateDto | null>(null);
 
-  React.useEffect(() => {
+  React.useEffect(() => { //function to retrieve JWT and send it along with req
     getJwt();
   }, []);
 
