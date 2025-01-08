@@ -1,6 +1,6 @@
 import React, { useContext, useState, ReactNode } from 'react';
 import { IUserLoginResponse, IUserEntity } from 'blog-common-1.0';
-import { AuthContext } from './AuthContext'; // Correct import path
+import { AuthContext } from './AuthContext'; 
 
 const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const storedInfo = localStorage.getItem('user')
