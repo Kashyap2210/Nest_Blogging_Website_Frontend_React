@@ -3,6 +3,7 @@
 import axios, { AxiosResponse } from 'axios';
 import { IBlogCreateDto, IBlogEntity } from 'blog-common-1.0';
 import React, { useState } from 'react';
+import { getJwt } from '../helpers/helper';
 
 export default function BlogCreate() {
   const [formData, setFormData] = useState<IBlogCreateDto>({
@@ -11,6 +12,10 @@ export default function BlogCreate() {
     keywords: '',
   });
   const [newBlog, setNewBlog] = useState<IBlogCreateDto | null>(null);
+
+  React.useEffect(() => {
+    getJwt();
+  }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -26,7 +31,7 @@ export default function BlogCreate() {
 
     try {
       const response: AxiosResponse<IBlogEntity> = await axios.post(
-        'http://localhost:3000/api/users',
+        'http://localhost:3000/api/blog',
         formData
       );
       console.log('this is the response', response);
@@ -35,6 +40,7 @@ export default function BlogCreate() {
       setNewBlog(data);
     } catch (error) {
       if (axios.isAxiosError(error)) {
+        // console.log("this is the response", response)
         console.error(error.response?.data); // Log the backend error response
       } else {
         console.error('Unexpected error:', error);
