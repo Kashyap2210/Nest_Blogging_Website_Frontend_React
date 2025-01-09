@@ -19,7 +19,8 @@ export default function Login() {
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault(); // Prevent page reload
+    e.preventDefault();
+
     console.log('Form Data Submitted: ', formData);
 
     try {
@@ -28,13 +29,16 @@ export default function Login() {
         'http://localhost:3000/api/auth/login',
         formData
       );
+
       console.log('Backend Response: ', response.data);
+
       login(response.data);
 
       setResponseMessage('Login successful!'); // Display success message
       setErrorMessage(''); // Clear error message
     } catch (error) {
       console.error('Error submitting the form: ', error);
+
       setResponseMessage(''); // Clear success message
       setErrorMessage('Failed to login. Please try again.'); // Set error message
     }

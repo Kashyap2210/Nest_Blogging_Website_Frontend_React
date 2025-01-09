@@ -1,5 +1,3 @@
-// import React from "react"
-
 import axios, { AxiosResponse } from 'axios';
 import { IBlogCreateDto, IBlogEntity } from 'blog-common-1.0';
 import React, { useState } from 'react';
@@ -13,7 +11,8 @@ export default function BlogCreate() {
   });
   const [newBlog, setNewBlog] = useState<IBlogCreateDto | null>(null);
 
-  React.useEffect(() => { //function to retrieve JWT and send it along with req
+  React.useEffect(() => {
+    //function to retrieve JWT and send it along with req
     getJwt();
   }, []);
 
