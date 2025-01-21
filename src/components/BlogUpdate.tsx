@@ -4,11 +4,9 @@ import { getJwt } from '../helpers/helper';
 import axios, { AxiosResponse } from 'axios';
 
 export default function BlogUpdate() {
-  const [formData, setFormData] = useState<IBlogUpdateDto | null>({
-    title: '',
-    content: '',
-    keywords: '',
-  });
+  const [formData, setFormData] = useState<IBlogUpdateDto | null>(
+    null
+  );
   const [updatedBlog, setUpdatedBlog] = useState<IBlogEntity | null>(null);
   const [id, setId] = useState<number>();
 
@@ -34,23 +32,29 @@ export default function BlogUpdate() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    console.log('this is the form Data', formData);
-
+    const token = getJwt(); // Fetch the token
+    
+    //Filters out empty fields from the form data. In this way we can add more keys to blogs in coming days
+    const cleanedFormData = Object.fromEntries(
+      Object.entries(formData || {}).filter(([key, value]) => value !== null && value !== '')
+    );
+    
     if (!id) {
       alert('Please Provide Valid Id');
       return;
     }
 
-    console.log('Form Data:', formData);
-    console.log('ID being sent:', id);
-
     try {
       const response: AxiosResponse<IBlogEntity> = await axios.patch(
         `http://localhost:3000/api/blog/${id}`,
-        formData
+        cleanedFormData, {
+        headers: {
+          Authorization: `Bearer ${token}`, // Add token to header
+        }
+      }
       );
 
-      console.log('this is the response from backend', response);
+      // console.log('this is the response from backend', response);
       console.log('this is the updated blog', response.data);
 
       setUpdatedBlog(response.data);
