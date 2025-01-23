@@ -1,6 +1,7 @@
-import { useState } from "react";
 import axios, { AxiosResponse } from "axios";
 import { IUserLoginResponse } from 'blog-common-1.0';
+import { useState } from "react";
+import { Link } from "react-router";
 import { useAuth } from '../context/AuthProvider';
 
 export default function Login() {
@@ -20,7 +21,7 @@ export default function Login() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
+    
     console.log('Form Data Submitted: ', formData);
 
     try {
@@ -80,8 +81,13 @@ export default function Login() {
           <p>Email: {user.emailId}</p>
           {/* You can also store the access token in localStorage or sessionStorage */}
           <p>Access Token: {accessToken}</p>
+
+          
         </div>
       )}
+      <button>
+      <Link to="/api">Go To HomePage</Link>     
+      </button>
     </div>
   );
 }

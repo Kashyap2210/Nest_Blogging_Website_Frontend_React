@@ -1,6 +1,7 @@
 import axios, { AxiosResponse } from 'axios';
 import { IBlogCreateDto, IBlogEntity } from 'blog-common-1.0';
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router';
 import { getJwt } from '../helpers/helper';
 
 export default function BlogCreate() {
@@ -28,10 +29,16 @@ export default function BlogCreate() {
     e.preventDefault();
     console.log('this is the blog data', formData);
 
+    const token: string | null = getJwt();
+
     try {
       const response: AxiosResponse<IBlogEntity> = await axios.post(
         'http://localhost:3000/api/blog',
-        formData
+        formData, {
+        headers: {
+          Authorization: `Bearer ${token}`, // Add token to header
+        }
+      }
       );
       console.log('this is the response', response);
       const { data } = response;
@@ -46,6 +53,14 @@ export default function BlogCreate() {
       }
     }
   };
+
+  const routeToUpdateBlog = () => {
+    console.log("click event for routing to update blog page")
+    const navigate = useNavigate()
+    navigate("/api/updateBlog")
+
+  }
+
   return (
     <>
       <div>this is the container to create blogs</div>
@@ -82,6 +97,13 @@ export default function BlogCreate() {
         <br />
         <button type="submit">Create Blog</button>
       </form>
+
+      <button onClick={routeToUpdateBlog}>
+        {/* <Link to={"/api/updateBlog"}> */}
+          Update Blog
+        {/* </Link> */}
+      </button>
+
       {newBlog && (
         <div>
           <h2>This is the title of Blog: {newBlog.title}</h2>

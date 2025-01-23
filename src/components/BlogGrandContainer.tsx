@@ -1,34 +1,18 @@
+import { Route, Routes } from 'react-router';
 import BlogCreate from './BlogCreate';
 import BlogUpdate from './BlogUpdate';
+import HomePage from './Homepage';
 import Login from './Login';
 import UserCreate from './UserCreate';
 
 export default function BlogGrandContainer() {
   return (
-    <>
-      <UserCreate />
-      <br />
-      <br />
-      <br />
-      <hr />
-      <br />
-      <br />
-      <br />
-      <Login />
-      <br />
-      <br />
-      <br />
-      <hr />
-      <BlogCreate />
-      <br />
-      <br />
-      <br />
-      <hr />
-      <BlogUpdate />
-      <br />
-      <br />
-      <br />
-      <hr />
-    </>
-  );
+    <Routes>
+        <Route path="/api" element={<HomePage/>} />
+        <Route path="/api/createBlog" element={<BlogCreate/>} />
+        <Route path="/api/updateBlog" element={<BlogUpdate/>} />
+        <Route path="/api/createUser" element={<UserCreate/>} />
+        <Route path="/api/login" element={<Login/>} />
+    </Routes>
+    );
 }
