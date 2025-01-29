@@ -18,12 +18,20 @@ export default function HomePage() {
     const handleCreateUser = () => {
         navigate('/api/createUser');
     };
+
+    const handleCreateComment = () => {
+        navigate('/api/createComment');
+    };
+
+
     return (
         <div>
 
             <button onClick={handleLogin}>Login</button>
             <button onClick={handleCreateBlog}>Create Blog</button>
             <button onClick={handleUpdateBlog}>Update Blog</button>
-            <button onClick={handleCreateUser}>Create User</button></div>
+            <button onClick={handleCreateUser}>Create User</button>
+            <button onClick={handleCreateComment}>Create Comment</button>
+        </div>
     )
 }
