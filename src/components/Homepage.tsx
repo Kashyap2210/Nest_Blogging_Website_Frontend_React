@@ -23,6 +23,9 @@ export default function HomePage() {
         navigate('/api/createComment');
     };
 
+    const handleBlogById = () => {
+        navigate('/api/getBlogById')
+    }
 
     return (
         <div>
@@ -32,6 +35,7 @@ export default function HomePage() {
             <button onClick={handleUpdateBlog}>Update Blog</button>
             <button onClick={handleCreateUser}>Create User</button>
             <button onClick={handleCreateComment}>Create Comment</button>
+            <button onClick={handleBlogById}>Get Blog By Id</button>
         </div>
     )
 }
