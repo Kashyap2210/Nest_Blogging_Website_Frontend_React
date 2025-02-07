@@ -6,6 +6,7 @@ import Login from './Login';
 import UserCreate from './UserCreate';
 import Comment from './Comment';
 import BlogById from './BlogById';
+import AllBlogs from './AllBlogs';
 
 export default function BlogGrandContainer() {
   return (
@@ -18,6 +19,7 @@ export default function BlogGrandContainer() {
       <Route path="/api/createComment" element={<Comment />} />
       <Route path="/api/createComment" element={<Comment />} />
       <Route path="/api/getBlogById" element={<BlogById/>} />
+      <Route path="/api/getAllBlogs" element={<AllBlogs/>} />
     </Routes>
   );
 }

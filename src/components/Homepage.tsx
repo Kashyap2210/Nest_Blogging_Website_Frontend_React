@@ -27,6 +27,10 @@ export default function HomePage() {
         navigate('/api/getBlogById')
     }
 
+    const handleAllBlogs = () =>{
+        navigate('/api/getAllBlogs')
+    }
+
     return (
         <div>
 
@@ -36,6 +40,7 @@ export default function HomePage() {
             <button onClick={handleCreateUser}>Create User</button>
             <button onClick={handleCreateComment}>Create Comment</button>
             <button onClick={handleBlogById}>Get Blog By Id</button>
+            <button onClick={handleAllBlogs}>Get All Blogs</button>
         </div>
     )
 }
