@@ -1,14 +1,14 @@
 import axios, { AxiosResponse } from "axios";
-import { IBlogEntityArray } from "blog-common-1.0";
-import { getJwt } from "../helpers/helper";
+import { IBlogResponse } from "blog-common-1.0";
 import { useState } from "react";
+import { getJwt } from "../helpers/helper";
 import BlogList from "./BlogList";
 
 export default function AllBlogs() {
-  const [blogArray, setBlogArray] = useState<IBlogEntityArray>([]);
+  const [blogArray, setBlogArray] = useState<IBlogResponse[]>([]);
   const getAllBlogs = async () => {
     try {
-      const allBlogs: AxiosResponse<IBlogEntityArray> = await axios.get(
+      const allBlogs: AxiosResponse<IBlogResponse[]> = await axios.get(
         `http://localhost:3000/api/blog/`,
         {
           headers: {
@@ -16,16 +16,19 @@ export default function AllBlogs() {
           },
         }
       );
-      console.log("this are all the blogs", allBlogs);
 
-      let blogs: IBlogEntityArray = [];
+      // console.log("this is a ", allBlogs.data[0].blog);
+
+      // console.log("this are all the blogs", allBlogs);
+
+      let blogs: IBlogResponse[] = [];
       allBlogs.data.map((blog) => blogs.push(blog));
 
-      setBlogArray(allBlogs.data);
+      // console.log("this is the blogs array", blogs);
 
-      console.log("this is the blogs array", blogs);
+      setBlogArray(blogs);
 
-      console.log("this are the all blogs", blogArray);
+      // console.log("this are the all blogs", blogArray);
     } catch (error) {
       if (axios.isAxiosError(error)) {
         console.log("this is the error", error.response?.data);
@@ -38,7 +41,7 @@ export default function AllBlogs() {
       <button onClick={getAllBlogs}>Get All Blogs</button>
       <ul>
         {blogArray.map((blog) => (
-          <BlogList key={blog.id} blog={blog} />
+          <BlogList key={blog.blog.id} blog={blog.blog} likes={blog.likes} />
         ))}
       </ul>
     </div>
