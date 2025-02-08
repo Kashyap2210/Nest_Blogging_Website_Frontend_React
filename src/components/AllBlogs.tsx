@@ -1,6 +1,7 @@
 import axios, { AxiosResponse } from "axios";
 import { IBlogResponse } from "blog-common-1.0";
 import { useState } from "react";
+import { Link } from "react-router";
 import { getJwt } from "../helpers/helper";
 import BlogList from "./BlogList";
 
@@ -39,6 +40,10 @@ export default function AllBlogs() {
   return (
     <div>
       <button onClick={getAllBlogs}>Get All Blogs</button>
+      <br /><br />
+      <button>
+        <Link to="/api">Go To HomePage</Link>
+      </button>
       <ul>
         {blogArray.map((blog) => (
           <BlogList key={blog.blog.id} blog={blog.blog} likes={blog.likes} />
