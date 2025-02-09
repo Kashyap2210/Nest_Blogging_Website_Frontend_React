@@ -1,4 +1,3 @@
-import axios, { AxiosResponse } from "axios";
 import {
   IBlogEntity,
   IBlogLikesCounterEntity,
@@ -7,17 +6,22 @@ import {
 } from "blog-common-1.0";
 import React, { useState } from "react";
 import { Link } from "react-router";
-import { getBlogByIdApiCallFunction } from "../api functions/blogs.api.calls.function";
-import { getJwt } from "../helpers/helper";
+import { handleSubmitForBlogGetById } from "../api functions/blogs.api.calls.function";
+import {
+  changeLikeStatusApiCallFunction,
+  createDislikeEntityApiCallFunction,
+  createLikeEntityApiCallFunction,
+} from "../api functions/likes/dislikes.api.calls.functions";
 
 export default function BlogById() {
   const [formData, setFormData] = useState({
     blogId: 0,
   });
   const [blog, setBlog] = useState<IBlogEntity | null>(null);
-  const [comment, setComments] = useState<ICommentEntity[]>();
-  const [likesAndDislikeEntities, setLikesAndDislikeEntities] =
-    useState<IBlogLikesCounterEntity[]>();
+  const [comment, setComments] = useState<ICommentEntity[]>([]);
+  const [likesAndDislikeEntities, setLikesAndDislikeEntities] = useState<
+    IBlogLikesCounterEntity[]
+  >([]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -30,14 +34,7 @@ export default function BlogById() {
   const handleSubmitForBlogById = async (
     e: React.FormEvent<HTMLFormElement>
   ) => {
-    e.preventDefault(); // ✅ Prevent page refresh
-
-    // if (!formData.blogId) {
-    //   console.error("❌ Error: Blog ID is missing.");
-    //   return;
-    // }
-
-    await getBlogByIdApiCallFunction(
+    await handleSubmitForBlogGetById(
       e,
       formData.blogId,
       setBlog,
@@ -54,86 +51,33 @@ export default function BlogById() {
   );
 
   const likeBlog = async () => {
-    // e.preventDefault();
-    console.log("inside the like function");
     try {
-      const likeResponse: AxiosResponse<IBlogLikesCounterEntity> =
-        await axios.post(
-          `http://localhost:3000/api/likes-counter-blogs/`,
-          {
-            blogId: blog?.id,
-            likedStatus: LikeStatus.LIKED,
-          },
-          {
-            headers: {
-              Authorization: `Bearer ${getJwt()}`,
-            },
-          }
-        );
-      setLikesAndDislikeEntities((prevLikes) => [
-        ...(prevLikes || []),
-        likeResponse.data,
-      ]);
-      handleSubmitForBlogById({
-        preventDefault: () => {},
-      } as React.FormEvent<HTMLFormElement>);
-      //   console.log("this is the like response", likeResponse);
+      await createLikeEntityApiCallFunction(
+        formData.blogId,
+        setLikesAndDislikeEntities
+      );
     } catch (error) {
-      if (axios.isAxiosError(error)) {
-        console.error(error.response?.data);
-      } else {
-        console.log("this is hte error", error);
-      }
+      console.error("falied to create like", error);
     }
   };
   const dislikeBlog = async () => {
-    // e.preventDefault()
     console.log("inside the like function");
     try {
-      const likeResponse: AxiosResponse<IBlogLikesCounterEntity> =
-        await axios.post(
-          `http://localhost:3000/api/likes-counter-blogs/`,
-          {
-            blogId: blog?.id,
-            likedStatus: LikeStatus.DISLIKED,
-          },
-          {
-            headers: {
-              Authorization: `Bearer ${getJwt()}`,
-            },
-          }
-        );
-      setLikesAndDislikeEntities((prevLikes) => [
-        ...(prevLikes || []),
-        likeResponse.data,
-      ]);
-      handleSubmitForBlogById({
-        preventDefault: () => {},
-      } as React.FormEvent<HTMLFormElement>);
-      //   console.log("this is the like response", likeResponse);
+      await createDislikeEntityApiCallFunction(
+        formData.blogId,
+        setLikesAndDislikeEntities
+      );
     } catch (error) {
-      if (axios.isAxiosError(error)) {
-        console.error(error.response?.data);
-      } else {
-        console.log("this is hte error", error);
-      }
+      console.error("falied to create dislike", error);
     }
   };
 
   const changeStatusToNeutral = async () => {
     console.log("inside the double click function");
     try {
-      const response: AxiosResponse<void> = await axios.post(
-        `http://localhost:3000/api/likes-counter-blogs/${blog?.id}`,
-        {
-          headers: {
-            Authorization: `Bearer ${getJwt()}`,
-          },
-        }
-      );
-      console.log("this is the response from double click function", response);
+      await changeLikeStatusApiCallFunction(formData.blogId);
 
-      handleSubmitForBlogById({
+      await handleSubmitForBlogById({
         preventDefault: () => {},
       } as React.FormEvent<HTMLFormElement>);
     } catch (error) {}

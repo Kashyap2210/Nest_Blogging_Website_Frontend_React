@@ -91,3 +91,23 @@ export const getBlogByIdApiCallFunction = async (
     }
   }
 };
+
+export const handleSubmitForBlogGetById = async (
+  e: React.FormEvent<HTMLFormElement>,
+  blogId: number,
+  setBlog?: (blog: IBlogEntity) => void,
+  setComments?: (comments: ICommentEntity[]) => void,
+  setLikesAndDislikeEntities?: (
+    likesDislikeEntities: IBlogLikesCounterEntity[]
+  ) => void
+) => {
+  e.preventDefault(); // ✅ Prevent page refresh
+
+  await getBlogByIdApiCallFunction(
+    e,
+    blogId,
+    setBlog,
+    setComments,
+    setLikesAndDislikeEntities
+  );
+};
