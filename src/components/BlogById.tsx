@@ -2,12 +2,12 @@ import axios, { AxiosResponse } from "axios";
 import {
   IBlogEntity,
   IBlogLikesCounterEntity,
-  IBlogResponse,
   ICommentEntity,
   LikeStatus,
 } from "blog-common-1.0";
 import React, { useState } from "react";
 import { Link } from "react-router";
+import { getBlogByIdApiCallFunction } from "../api functions/blogs.api.calls.function";
 import { getJwt } from "../helpers/helper";
 
 export default function BlogById() {
@@ -27,35 +27,23 @@ export default function BlogById() {
     }));
   };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const handleSubmitForBlogById = async (
+    e: React.FormEvent<HTMLFormElement>
+  ) => {
+    e.preventDefault(); // ✅ Prevent page refresh
 
-    try {
-      const response: AxiosResponse<IBlogResponse> = await axios.get(
-        `http://localhost:3000/api/blog/${formData.blogId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${getJwt()}`,
-          },
-        }
-      );
-      //   console.log("this is the response blog", response);
+    // if (!formData.blogId) {
+    //   console.error("❌ Error: Blog ID is missing.");
+    //   return;
+    // }
 
-      setBlog(response.data.blog);
-
-      //   console.log(response.data.comments);
-      setComments(response.data.comments);
-
-      //   console.log(response.data.likes);
-      setLikesAndDislikeEntities(response.data.likes);
-    } catch (error) {
-      if (axios.isAxiosError(error)) {
-        // console.log("this is the response", response)
-        console.error(error.response?.data); // Log the backend error response
-      } else {
-        console.error("Unexpected error:", error);
-      }
-    }
+    await getBlogByIdApiCallFunction(
+      e,
+      formData.blogId,
+      setBlog,
+      setComments,
+      setLikesAndDislikeEntities
+    );
   };
 
   const totalLikes = likesAndDislikeEntities?.filter(
@@ -66,7 +54,7 @@ export default function BlogById() {
   );
 
   const likeBlog = async () => {
-    // e.preventDefault()
+    // e.preventDefault();
     console.log("inside the like function");
     try {
       const likeResponse: AxiosResponse<IBlogLikesCounterEntity> =
@@ -86,7 +74,7 @@ export default function BlogById() {
         ...(prevLikes || []),
         likeResponse.data,
       ]);
-      handleSubmit({
+      handleSubmitForBlogById({
         preventDefault: () => {},
       } as React.FormEvent<HTMLFormElement>);
       //   console.log("this is the like response", likeResponse);
@@ -119,7 +107,7 @@ export default function BlogById() {
         ...(prevLikes || []),
         likeResponse.data,
       ]);
-      handleSubmit({
+      handleSubmitForBlogById({
         preventDefault: () => {},
       } as React.FormEvent<HTMLFormElement>);
       //   console.log("this is the like response", likeResponse);
@@ -145,7 +133,7 @@ export default function BlogById() {
       );
       console.log("this is the response from double click function", response);
 
-      handleSubmit({
+      handleSubmitForBlogById({
         preventDefault: () => {},
       } as React.FormEvent<HTMLFormElement>);
     } catch (error) {}
@@ -153,7 +141,7 @@ export default function BlogById() {
 
   return (
     <>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmitForBlogById}>
         <input
           type="text"
           placeholder="Blog Id"
