@@ -1,12 +1,13 @@
-import { Route, Routes } from 'react-router';
-import BlogCreate from './BlogCreate';
-import BlogUpdate from './BlogUpdate';
-import HomePage from './Homepage';
-import Login from './Login';
-import UserCreate from './UserCreate';
-import Comment from './Comment';
-import BlogById from './BlogById';
-import AllBlogs from './AllBlogs';
+import { Route, Routes } from "react-router";
+import BlogCreate from "./BlogCreate";
+import BlogUpdate from "./BlogUpdate";
+import HomePage from "./Homepage";
+import Login from "./Login";
+import UserCreate from "./UserCreate";
+import Comment from "./Comment";
+import BlogById from "./BlogById";
+import AllBlogs from "./AllBlogs";
+import IndividualBlog from "./IndividualBlog";
 
 export default function BlogGrandContainer() {
   return (
@@ -18,8 +19,9 @@ export default function BlogGrandContainer() {
       <Route path="/api/login" element={<Login />} />
       <Route path="/api/createComment" element={<Comment />} />
       <Route path="/api/createComment" element={<Comment />} />
-      <Route path="/api/getBlogById" element={<BlogById/>} />
-      <Route path="/api/getAllBlogs" element={<AllBlogs/>} />
+      <Route path="/api/getBlogById" element={<BlogById />} />
+      <Route path="/api/getAllBlogs" element={<AllBlogs />} />
+      <Route path="/api/readIndividualBlog" element={<IndividualBlog />} />
     </Routes>
   );
 }
