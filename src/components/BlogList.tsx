@@ -1,15 +1,7 @@
-import {
-  IBlogEntity,
-  IBlogLikesCounterEntity,
-  LikeStatus,
-} from "blog-common-1.0";
+import { LikeStatus } from "blog-common-1.0";
+import { IBlogListProps } from "../interfaces/blog_list_prop.interface";
 
-interface BlogListProps {
-  likes: IBlogLikesCounterEntity[];
-  blog: IBlogEntity;
-}
-
-export default function BlogList({ blog, likes }: BlogListProps) {
+export default function BlogList({ blog, likes, comments }: IBlogListProps) {
   const totalLikes =
     likes?.filter((like) => like.likedStatus === LikeStatus.LIKED).length || 0;
 

@@ -40,13 +40,19 @@ export default function AllBlogs() {
   return (
     <div>
       <button onClick={getAllBlogs}>Get All Blogs</button>
-      <br /><br />
+      <br />
+      <br />
       <button>
         <Link to="/api">Go To HomePage</Link>
       </button>
       <ul>
         {blogArray.map((blog) => (
-          <BlogList key={blog.blog.id} blog={blog.blog} likes={blog.likes} />
+          <BlogList
+            key={blog.blog.id}
+            blog={blog.blog}
+            likes={blog.likes}
+            comments={blog.comments}
+          />
         ))}
       </ul>
     </div>
