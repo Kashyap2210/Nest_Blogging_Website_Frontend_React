@@ -1,7 +1,7 @@
 import { IBlogCreateDto } from "blog-common-1.0";
 import React, { useState } from "react";
 import { useNavigate } from "react-router";
-import { createBlogApiCallFunctionU } from "../api functions/blogs.api.calls.function";
+import { createBlogApiCallFunction } from "../api functions/blogs.api.calls.function";
 import { getJwt } from "../helpers/helper";
 
 export default function BlogCreate() {
@@ -26,7 +26,7 @@ export default function BlogCreate() {
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    await createBlogApiCallFunctionU(e, formData, setNewBlog);
+    await createBlogApiCallFunction(e, formData, setNewBlog);
 
     // e.preventDefault();
     // console.log('this is the blog data', formData);

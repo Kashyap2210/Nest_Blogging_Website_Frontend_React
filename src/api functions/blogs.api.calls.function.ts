@@ -2,7 +2,7 @@ import axios, { AxiosResponse } from "axios";
 import { IBlogCreateDto, IBlogEntity } from "blog-common-1.0";
 import { getJwt } from "../helpers/helper";
 
-export const createBlogApiCallFunctionU = async (
+export const createBlogApiCallFunction = async (
   e: React.FormEvent<HTMLFormElement>,
   formData: IBlogCreateDto,
   setNewBlog?: (blog: IBlogEntity) => void
