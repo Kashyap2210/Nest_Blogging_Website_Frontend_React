@@ -82,6 +82,7 @@ export const getBlogByIdApiCallFunction = async (
       //   console.log(response.data.likes);
       setLikesAndDislikeEntities(response.data.likes);
     }
+    return response.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
       // console.log("this is the response", response)
@@ -103,11 +104,14 @@ export const handleSubmitForBlogGetById = async (
 ) => {
   e.preventDefault(); // ✅ Prevent page refresh
 
-  await getBlogByIdApiCallFunction(
+  const response = await getBlogByIdApiCallFunction(
     e,
     blogId,
     setBlog,
     setComments,
     setLikesAndDislikeEntities
   );
+  if (response) {
+    return response;
+  }
 };

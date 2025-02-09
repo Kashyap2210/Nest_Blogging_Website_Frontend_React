@@ -52,10 +52,13 @@ export default function BlogById() {
 
   const likeBlog = async () => {
     try {
-      await createLikeEntityApiCallFunction(
-        formData.blogId,
-        setLikesAndDislikeEntities
-      );
+      const newLike = await createLikeEntityApiCallFunction(formData.blogId);
+      if (newLike) {
+        setLikesAndDislikeEntities((previousLikes) => [
+          ...previousLikes,
+          newLike,
+        ]);
+      }
     } catch (error) {
       console.error("falied to create like", error);
     }
@@ -63,10 +66,16 @@ export default function BlogById() {
   const dislikeBlog = async () => {
     console.log("inside the like function");
     try {
-      await createDislikeEntityApiCallFunction(
-        formData.blogId,
-        setLikesAndDislikeEntities
+      const newDislike = await createDislikeEntityApiCallFunction(
+        formData.blogId
       );
+
+      if (newDislike) {
+        setLikesAndDislikeEntities((previousDislikes) => [
+          ...previousDislikes,
+          newDislike,
+        ]);
+      }
     } catch (error) {
       console.error("falied to create dislike", error);
     }
