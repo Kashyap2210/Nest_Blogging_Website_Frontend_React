@@ -6,7 +6,7 @@ import {
 } from "blog-common-1.0";
 import React, { useState } from "react";
 import { Link } from "react-router";
-import { handleSubmitForBlogGetById } from "../api functions/blogs.api.calls.function";
+import { handleSubmitForBlogGetById } from "../api functions/blogs/blogs.api.calls.function";
 import {
   changeLikeStatusApiCallFunction,
   createDislikeEntityApiCallFunction,
@@ -34,13 +34,13 @@ export default function BlogById() {
   const handleSubmitForBlogById = async (
     e: React.FormEvent<HTMLFormElement>
   ) => {
-    await handleSubmitForBlogGetById(
-      e,
-      formData.blogId,
-      setBlog,
-      setComments,
-      setLikesAndDislikeEntities
-    );
+    const response = await handleSubmitForBlogGetById(e, formData.blogId);
+
+    if (response) {
+      setBlog(response.blog);
+      setComments(response.comments);
+      setLikesAndDislikeEntities(response.likes);
+    }
   };
 
   const totalLikes = likesAndDislikeEntities?.filter(

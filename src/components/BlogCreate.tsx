@@ -1,7 +1,7 @@
 import { IBlogCreateDto } from "blog-common-1.0";
 import React, { useState } from "react";
 import { useNavigate } from "react-router";
-import { createBlogApiCallFunction } from "../api functions/blogs.api.calls.function";
+import { createBlogApiCallFunction } from "../api functions/blogs/blogs.api.calls.function";
 import { getJwt } from "../helpers/helper";
 
 export default function BlogCreate() {
@@ -26,34 +26,8 @@ export default function BlogCreate() {
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    await createBlogApiCallFunction(e, formData, setNewBlog);
-
-    // e.preventDefault();
-    // console.log('this is the blog data', formData);
-
-    // const token: string | null = getJwt();
-
-    // try {
-    //   const response: AxiosResponse<IBlogEntity> = await axios.post(
-    //     'http://localhost:3000/api/blog',
-    //     formData, {
-    //     headers: {
-    //       Authorization: `Bearer ${token}`, // Add token to header
-    //     }
-    //   }
-    //   );
-    //   console.log('this is the response', response);
-    //   const { data } = response;
-    //   console.log('this is the new blog', data);
-    //   setNewBlog(data);
-    // } catch (error) {
-    //   if (axios.isAxiosError(error)) {
-    //     // console.log("this is the response", response)
-    //     console.error(error.response?.data); // Log the backend error response
-    //   } else {
-    //     console.error('Unexpected error:', error);
-    //   }
-    // }
+    const newBlog = await createBlogApiCallFunction(e, formData);
+    if (newBlog) setNewBlog(newBlog);
   };
 
   const routeToUpdateBlog = () => {

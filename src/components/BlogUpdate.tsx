@@ -1,12 +1,11 @@
-import { IBlogEntity, IBlogUpdateDto } from 'blog-common-1.0';
-import React, { useState } from 'react';
-import { getJwt } from '../helpers/helper';
-import axios, { AxiosResponse } from 'axios';
+import axios from "axios";
+import { IBlogEntity, IBlogUpdateDto } from "blog-common-1.0";
+import React, { useState } from "react";
+import { updateBlogByIdApiCallFunction } from "../api functions/blogs/blogs.api.calls.function";
+import { getJwt } from "../helpers/helper";
 
 export default function BlogUpdate() {
-  const [formData, setFormData] = useState<IBlogUpdateDto | null>(
-    null
-  );
+  const [formData, setFormData] = useState<IBlogUpdateDto | null>(null);
   const [updatedBlog, setUpdatedBlog] = useState<IBlogEntity | null>(null);
   const [id, setId] = useState<number>();
 
@@ -32,37 +31,30 @@ export default function BlogUpdate() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const token = getJwt(); // Fetch the token
-    
     //Filters out empty fields from the form data. In this way we can add more keys to blogs in coming days
-    const cleanedFormData = Object.fromEntries(
-      Object.entries(formData || {}).filter(([key, value]) => value !== null && value !== '')
+    const cleanedFormData: IBlogUpdateDto = Object.fromEntries(
+      Object.entries(formData || {}).filter(
+        ([key, value]) => value !== null && value !== ""
+      )
     );
-    
+
     if (!id) {
-      alert('Please Provide Valid Id');
+      alert("Please Provide Valid Id");
       return;
     }
 
     try {
-      const response: AxiosResponse<IBlogEntity> = await axios.patch(
-        `http://localhost:3000/api/blog/${id}`,
-        cleanedFormData, {
-        headers: {
-          Authorization: `Bearer ${token}`, // Add token to header
-        }
-      }
+      const response: IBlogEntity = await updateBlogByIdApiCallFunction(
+        id,
+        cleanedFormData
       );
 
-      // console.log('this is the response from backend', response);
-      console.log('this is the updated blog', response.data);
-
-      setUpdatedBlog(response.data);
+      setUpdatedBlog(response);
     } catch (error) {
       if (axios.isAxiosError(error)) {
         console.error(error.response?.data);
       } else {
-        console.error('Unexpected error:', error);
+        console.error("Unexpected error:", error);
       }
     }
   };
@@ -75,7 +67,7 @@ export default function BlogUpdate() {
           type="number"
           name="id"
           placeholder="Blog ID"
-          value={id || ''}
+          value={id || ""}
           onChange={handleIdChange} // Separate handler for ID
         />
         <br />

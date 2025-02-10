@@ -1,11 +1,7 @@
-import {
-  IBlogLikesCounterEntity,
-  ICommentEntity,
-  LikeStatus,
-} from "blog-common-1.0";
+import { IBlogLikesCounterEntity, LikeStatus } from "blog-common-1.0";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router";
-import { handleSubmitForBlogGetById } from "../api functions/blogs.api.calls.function";
+import { handleSubmitForBlogGetById } from "../api functions/blogs/blogs.api.calls.function";
 import {
   changeLikeStatusApiCallFunction,
   createDislikeEntityApiCallFunction,
