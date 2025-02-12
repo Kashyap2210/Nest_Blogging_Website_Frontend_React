@@ -14,6 +14,7 @@ import {
   createDislikeEntityApiCallFunction,
   createLikeEntityApiCallFunction,
 } from "../api functions/likes/dislikes.api.calls.functions";
+import Comments from "./CommentsU";
 
 export default function BlogById() {
   const [formData, setFormData] = useState({
@@ -51,6 +52,12 @@ export default function BlogById() {
     }
   };
 
+  const removeCommentFromState = (commentId: number) => {
+    setComments((prevComments) =>
+      prevComments.filter((comment) => comment.id !== commentId)
+    );
+  };
+
   const totalLikes = likesAndDislikeEntities?.filter(
     (entity) => entity.likedStatus === LikeStatus.LIKED
   );
@@ -72,7 +79,7 @@ export default function BlogById() {
     }
   };
   const dislikeBlog = async () => {
-    console.log("inside the like function");
+    // console.log("inside the like function");
     try {
       const newDislike = await createDislikeEntityApiCallFunction(
         formData.blogId
@@ -90,7 +97,7 @@ export default function BlogById() {
   };
 
   const changeStatusToNeutral = async () => {
-    console.log("inside the double click function");
+    // console.log("inside the double click function");
     try {
       await changeLikeStatusApiCallFunction(formData.blogId);
 
@@ -100,16 +107,7 @@ export default function BlogById() {
     } catch (error) {}
   };
 
-  const handleCommentChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData((previousData) => ({
-      ...previousData,
-      [name]: value,
-    }));
-  };
-
   const createComment = async () => {
-    console.log("inside the create comment function");
     if (!blog?.id) {
       console.error("Blog id is required");
       return;
@@ -157,7 +155,7 @@ export default function BlogById() {
       <br />
       <br />
       <br />
-      <hr />
+      {/* <hr /> */}
       {blog && (
         <div>
           <h1>{blog.title}</h1>
@@ -173,11 +171,12 @@ export default function BlogById() {
       <h2>Comments</h2>
       {comment &&
         comment.map((mapping) => (
-          <div key={mapping.id}>
-            <h3>Text: {mapping.text}</h3>
-            <h4>Written By: {mapping.authorId}</h4>
-            <hr />
-          </div>
+          <Comments
+            id={mapping.id}
+            text={mapping.text}
+            authorId={mapping.authorId}
+            onDelete={removeCommentFromState}
+          />
         ))}
       <button onClick={() => setIsCommentFormVisible(!isCommentFormVisible)}>
         {isCommentFormVisible ? "Cancel" : "Add Comment"}
