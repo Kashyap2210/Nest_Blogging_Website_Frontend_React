@@ -44,8 +44,6 @@ export const getBlogByIdApiCallFunction = async (
 ) => {
   e.preventDefault();
 
-  console.log("this is the typeof blogId", typeof blogId);
-
   try {
     const response: AxiosResponse<IBlogResponse> = await axios.get(
       `http://localhost:3000/api/blog/${blogId}`,
