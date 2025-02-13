@@ -33,7 +33,7 @@ export const GetAllButton = styled(Button)<ButtonProps>(({ theme }) => ({
   },
 }));
 
-export const DeleteButton = styled(Button)<ButtonProps>(({ theme }) => ({
+export const DeleteButton = styled(Button)<ButtonProps>(({}) => ({
   color: "#fff",
   backgroundColor: grey[500],
   "&:hover": {
