@@ -15,6 +15,11 @@ import {
   createLikeEntityApiCallFunction,
 } from "../api functions/likes/dislikes.api.calls.functions";
 import Comments from "./CommentsU";
+import {
+  ColorButton,
+  DislikeButton,
+  LikeButton,
+} from "../styling functions/button.style.function";
 
 export default function BlogById() {
   const [formData, setFormData] = useState({
@@ -142,15 +147,17 @@ export default function BlogById() {
         />
         <br />
         <br />
-        <button type="submit">Get Blog</button>
+        <ColorButton type="submit">Get Blog</ColorButton>
       </form>
       <br />
       <br />
       <br />
       <br />
-      <button>
-        <Link to="/api">Go To HomePage</Link>
-      </button>
+      <ColorButton>
+        <Link style={{ textDecoration: "none", color: "white" }} to="/api">
+          Go To HomePage
+        </Link>
+      </ColorButton>
       <br />
       <br />
       <br />
@@ -178,9 +185,11 @@ export default function BlogById() {
             onDelete={removeCommentFromState}
           />
         ))}
-      <button onClick={() => setIsCommentFormVisible(!isCommentFormVisible)}>
+      <ColorButton
+        onClick={() => setIsCommentFormVisible(!isCommentFormVisible)}
+      >
         {isCommentFormVisible ? "Cancel" : "Add Comment"}
-      </button>
+      </ColorButton>
 
       {isCommentFormVisible && (
         <div>
@@ -205,14 +214,17 @@ export default function BlogById() {
         </div>
       )}
 
-      <button onClick={likeBlog} onDoubleClick={changeStatusToNeutral}>
+      <LikeButton onClick={likeBlog} onDoubleClick={changeStatusToNeutral}>
         Like
-      </button>
+      </LikeButton>
       <br />
       <br />
-      <button onClick={dislikeBlog} onDoubleClick={changeStatusToNeutral}>
+      <DislikeButton
+        onClick={dislikeBlog}
+        onDoubleClick={changeStatusToNeutral}
+      >
         Dislike
-      </button>
+      </DislikeButton>
     </>
   );
 }

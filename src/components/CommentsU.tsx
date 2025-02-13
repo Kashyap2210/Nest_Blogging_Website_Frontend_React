@@ -1,4 +1,5 @@
 import { deleteCommentByIdApiCallFunction } from "../api functions/comments/comments.api.calls.function";
+import { DeleteButton } from "../styling functions/button.style.function";
 
 export interface ICommentProp {
   id: number;
@@ -28,7 +29,9 @@ export default function Comments({
     <div key={id}>
       <p>{text}</p>
       <p>{authorId}</p>
-      <button onClick={() => deleteComment(id ? id : 0)}>Delete Comment</button>
+      <DeleteButton onClick={() => deleteComment(id ? id : 0)}>
+        Delete Comment
+      </DeleteButton>
       <hr />
     </div>
   );

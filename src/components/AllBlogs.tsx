@@ -3,6 +3,10 @@ import { IBlogResponse } from "blog-common-1.0";
 import { useState } from "react";
 import { Link } from "react-router";
 import { getAllBlogsApiCallFunction } from "../api functions/blogs/blogs.api.calls.function";
+import {
+  ColorButton,
+  GetAllButton,
+} from "../styling functions/button.style.function";
 import BlogList from "./BlogList";
 
 export default function AllBlogs() {
@@ -31,12 +35,14 @@ export default function AllBlogs() {
 
   return (
     <div>
-      <button onClick={getAllBlogs}>Get All Blogs</button>
+      <GetAllButton onClick={getAllBlogs}>Get All Blogs</GetAllButton>
       <br />
       <br />
-      <button>
-        <Link to="/api">Go To HomePage</Link>
-      </button>
+      <ColorButton>
+        <Link style={{ textDecoration: "none", color: "white" }} to="/api">
+          Go To HomePage
+        </Link>
+      </ColorButton>
       <ul>
         {blogArray.map((blog) => (
           <BlogList

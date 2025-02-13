@@ -1,7 +1,14 @@
+import { CloudUploadOutlined } from "@mui/icons-material";
+import { Button } from "@mui/material";
 import axios from "axios";
 import { IUserCreateDto, IUserEntity, UserGender } from "blog-common-1.0";
 import { useState } from "react";
+import { Link } from "react-router";
 import { createUserApiCallFunction } from "../api functions/users/users.api.calls.functions";
+import {
+  ColorButton,
+  VisuallyHiddenInput,
+} from "../styling functions/button.style.function";
 
 export default function UserCreate() {
   const [userData, setUserData] = useState<IUserCreateDto>({
@@ -134,12 +141,27 @@ export default function UserCreate() {
         <br />
         <br />
         <br />
-        <input
+        <Button
+          component="label"
+          role={undefined}
+          variant="contained"
+          tabIndex={-1}
+          startIcon={<CloudUploadOutlined />}
+        >
+          Upload files
+          <VisuallyHiddenInput
+            type="file"
+            // name="file"
+            // placeholder="Profile Picture File"
+            onChange={handleFileUpload}
+          />
+        </Button>
+        {/* <input
           type="file"
           name="file"
           placeholder="Profile Picture File"
           onChange={handleFileUpload}
-        />
+        /> */}
         <br />
         <br />
         <br />
@@ -157,8 +179,16 @@ export default function UserCreate() {
           </option>
         </select>
         <br />
-        <button type="submit">Create User</button>
+        <br />
+        <ColorButton type="submit">Create User</ColorButton>
       </form>
+      <br />
+      <br />
+      <ColorButton>
+        <Link style={{ textDecoration: "none", color: "white" }} to="/api">
+          Go To HomePage
+        </Link>
+      </ColorButton>
       {newUser && (
         <div>
           <h2>Welcome {newUser.name}</h2>

@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router";
+import { ColorButton } from "../styling functions/button.style.function";
 
 export default function HomePage() {
   const navigate = useNavigate();
@@ -33,13 +34,29 @@ export default function HomePage() {
 
   return (
     <div>
-      <button onClick={handleLogin}>Login</button>
-      <button onClick={handleCreateBlog}>Create Blog</button>
-      <button onClick={handleUpdateBlog}>Update Blog</button>
-      <button onClick={handleCreateUser}>Create User</button>
-      <button onClick={handleCreateComment}>Create Comment</button>
-      <button onClick={handleBlogById}>Get Blog By Id</button>
-      <button onClick={handleAllBlogs}>Get All Blogs</button>
+      <ColorButton onClick={handleLogin} variant="contained" color="success">
+        Login
+      </ColorButton>
+      <br />
+      <br />
+      <ColorButton onClick={handleCreateBlog}>Create Blog</ColorButton>
+      <br />
+      <br />
+      <ColorButton onClick={handleUpdateBlog}>Update Blog</ColorButton>
+      <br />
+      <br />
+      <ColorButton onClick={handleCreateUser}>Create User</ColorButton>
+      <br />
+      <br />
+      <ColorButton onClick={handleCreateComment}>Create Comment</ColorButton>
+      <br />
+      <br />
+      <ColorButton onClick={handleBlogById}>Get Blog By Id</ColorButton>
+      <br />
+      <br />
+      <ColorButton onClick={handleAllBlogs}>Get All Blogs</ColorButton>
+      <br />
+      <br />
     </div>
   );
 }

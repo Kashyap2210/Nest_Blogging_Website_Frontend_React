@@ -1,8 +1,9 @@
 import { IBlogCreateDto } from "blog-common-1.0";
 import React, { useState } from "react";
-import { useNavigate } from "react-router";
+import { Link } from "react-router";
 import { createBlogApiCallFunction } from "../api functions/blogs/blogs.api.calls.function";
 import { getJwt } from "../helpers/helper";
+import { ColorButton } from "../styling functions/button.style.function";
 
 export default function BlogCreate() {
   const [formData, setFormData] = useState<IBlogCreateDto>({
@@ -30,15 +31,9 @@ export default function BlogCreate() {
     if (newBlog) setNewBlog(newBlog);
   };
 
-  const routeToUpdateBlog = () => {
-    console.log("click event for routing to update blog page");
-    const navigate = useNavigate();
-    navigate("/api/updateBlog");
-  };
-
   return (
     <>
-      <div>this is the container to create blogs</div>
+      <h2>Create New Blog</h2>
       <form onSubmit={handleSubmit}>
         <input
           type="title"
@@ -70,14 +65,19 @@ export default function BlogCreate() {
         <br />
         <br />
         <br />
-        <button type="submit">Create Blog</button>
+        <ColorButton type="submit">Create Blog</ColorButton>
       </form>
+      <br />
+      <br />
 
-      <button onClick={routeToUpdateBlog}>
-        {/* <Link to={"/api/updateBlog"}> */}
-        Update Blog
-        {/* </Link> */}
-      </button>
+      {/* <ColorButton onClick={routeToUpdateBlog}>
+        <link to={"/api/updateBlog"}>Update Blog</link>
+      </ColorButton> */}
+      <ColorButton>
+        <Link style={{ textDecoration: "none", color: "white" }} to="/api">
+          Go To HomePage
+        </Link>
+      </ColorButton>
 
       {newBlog && (
         <div>

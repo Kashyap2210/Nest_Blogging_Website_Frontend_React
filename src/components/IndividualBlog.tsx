@@ -5,7 +5,7 @@ import {
   LikeStatus,
 } from "blog-common-1.0";
 import { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router";
+import { Link, useLocation, useNavigate } from "react-router";
 import { handleSubmitForBlogGetById } from "../api functions/blogs/blogs.api.calls.function";
 import {
   changeLikeStatusApiCallFunction,
@@ -15,6 +15,12 @@ import {
 import { IBlogListProps } from "../interfaces/blog_list_prop.interface";
 import Comments from "./CommentsU";
 import { createCommentApiCallFunction } from "../api functions/comments/comments.api.calls.function";
+import {
+  ColorButton,
+  DislikeButton,
+  GetAllButton,
+  LikeButton,
+} from "../styling functions/button.style.function";
 
 export default function IndividualBlog() {
   const [allComments, setAllComment] = useState<ICommentEntity[]>([]);
@@ -180,9 +186,11 @@ export default function IndividualBlog() {
             onDelete={removeCommentFromState}
           />
         ))}
-      <button onClick={() => setIsCommentFormVisible(!isCommentFormVisible)}>
+      <GetAllButton
+        onClick={() => setIsCommentFormVisible(!isCommentFormVisible)}
+      >
         {isCommentFormVisible ? "Cancel" : "Add Comment"}
-      </button>
+      </GetAllButton>
       {isCommentFormVisible && (
         <div>
           <input
@@ -193,19 +201,28 @@ export default function IndividualBlog() {
               setNewComment({ ...newComment, text: e.target.value })
             }
           />
-          <button onClick={createComment}>Create</button>
+          <GetAllButton onClick={createComment}>Create</GetAllButton>
         </div>
       )}
       <h5>Total Likes: {totalLikes}</h5>
       <h5>Total Dislikes: {totalDislikes}</h5>
       <hr />
-      <button onClick={likeBlog} onDoubleClick={changeStatusToNeutral}>
+      <LikeButton onClick={likeBlog} onDoubleClick={changeStatusToNeutral}>
         Like
-      </button>{" "}
+      </LikeButton>
       &nbsp;&nbsp;
-      <button onClick={dislikeBlog} onDoubleClick={changeStatusToNeutral}>
+      <DislikeButton
+        onClick={dislikeBlog}
+        onDoubleClick={changeStatusToNeutral}
+      >
         Dislike
-      </button>
+      </DislikeButton>
+      &nbsp;&nbsp;
+      <ColorButton>
+        <Link style={{ textDecoration: "none", color: "white" }} to="/api">
+          Go To HomePage
+        </Link>
+      </ColorButton>
     </div>
   );
 }

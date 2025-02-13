@@ -1,8 +1,10 @@
 import axios from "axios";
 import { IBlogEntity, IBlogUpdateDto } from "blog-common-1.0";
 import React, { useState } from "react";
+import { Link } from "react-router";
 import { updateBlogByIdApiCallFunction } from "../api functions/blogs/blogs.api.calls.function";
 import { getJwt } from "../helpers/helper";
+import { ColorButton } from "../styling functions/button.style.function";
 
 export default function BlogUpdate() {
   const [formData, setFormData] = useState<IBlogUpdateDto | null>(null);
@@ -61,7 +63,7 @@ export default function BlogUpdate() {
 
   return (
     <>
-      <div>This is the component to update the blog</div>
+      <h2>Update specific blog with Id</h2>
       <form onSubmit={handleSubmit}>
         <input
           type="number"
@@ -103,7 +105,14 @@ export default function BlogUpdate() {
         <br />
         <br />
         <br />
-        <button type="submit">Update Blog</button>
+        <ColorButton type="submit">Update Blog</ColorButton>
+        <br />
+        <br />
+        <ColorButton>
+          <Link style={{ textDecoration: "none", color: "white" }} to="/api">
+            Go To HomePage
+          </Link>
+        </ColorButton>
       </form>
       {updatedBlog && (
         <div>
