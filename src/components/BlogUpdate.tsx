@@ -36,7 +36,7 @@ export default function BlogUpdate() {
     //Filters out empty fields from the form data. In this way we can add more keys to blogs in coming days
     const cleanedFormData: IBlogUpdateDto = Object.fromEntries(
       Object.entries(formData || {}).filter(
-        ([key, value]) => value !== null && value !== ""
+        ([_, value]) => value !== null && value !== ""
       )
     );
 
