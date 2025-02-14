@@ -5,22 +5,22 @@ import {
   LikeStatus,
 } from "blog-common-1.0";
 import { useEffect, useState } from "react";
-import { Link, useLocation, useNavigate } from "react-router";
+import { Link, useLocation } from "react-router";
 import { handleSubmitForBlogGetById } from "../api functions/blogs/blogs.api.calls.function";
+import { createCommentApiCallFunction } from "../api functions/comments/comments.api.calls.function";
 import {
   changeLikeStatusApiCallFunction,
   createDislikeEntityApiCallFunction,
   createLikeEntityApiCallFunction,
 } from "../api functions/likes/dislikes.api.calls.functions";
 import { IBlogListProps } from "../interfaces/blog_list_prop.interface";
-import Comments from "./CommentsU";
-import { createCommentApiCallFunction } from "../api functions/comments/comments.api.calls.function";
 import {
   ColorButton,
   DislikeButton,
   GetAllButton,
   LikeButton,
 } from "../styling functions/button.style.function";
+import Comments from "./CommentsU";
 
 export default function IndividualBlog() {
   const [allComments, setAllComment] = useState<ICommentEntity[]>([]);
@@ -29,7 +29,6 @@ export default function IndividualBlog() {
   >([]);
 
   const location = useLocation();
-  const navigate = useNavigate();
   const { blog, likes, comments }: IBlogListProps = location.state || {};
 
   const [isCommentFormVisible, setIsCommentFormVisible] = useState(false);
