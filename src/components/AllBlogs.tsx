@@ -1,29 +1,25 @@
-import axios, { AxiosResponse } from "axios";
+import axios from "axios";
 import { IBlogResponse } from "blog-common-1.0";
 import { useState } from "react";
 import { Link } from "react-router";
-import { getJwt } from "../helpers/helper";
+import { getAllBlogsApiCallFunction } from "../api functions/blogs/blogs.api.calls.function";
+import {
+  ColorButton,
+  GetAllButton,
+} from "../styling functions/button.style.function";
 import BlogList from "./BlogList";
 
 export default function AllBlogs() {
   const [blogArray, setBlogArray] = useState<IBlogResponse[]>([]);
   const getAllBlogs = async () => {
     try {
-      const allBlogs: AxiosResponse<IBlogResponse[]> = await axios.get(
-        `http://localhost:3000/api/blog/`,
-        {
-          headers: {
-            Authorization: `Bearer ${getJwt()}`,
-          },
-        }
-      );
-
-      // console.log("this is a ", allBlogs.data[0].blog);
-
-      // console.log("this are all the blogs", allBlogs);
+      const allBlogs: IBlogResponse[] | undefined =
+        await getAllBlogsApiCallFunction();
 
       let blogs: IBlogResponse[] = [];
-      allBlogs.data.map((blog) => blogs.push(blog));
+      if (allBlogs) {
+        allBlogs.map((blog) => blogs.push(blog));
+      }
 
       // console.log("this is the blogs array", blogs);
 
@@ -39,12 +35,14 @@ export default function AllBlogs() {
 
   return (
     <div>
-      <button onClick={getAllBlogs}>Get All Blogs</button>
+      <GetAllButton onClick={getAllBlogs}>Get All Blogs</GetAllButton>
       <br />
       <br />
-      <button>
-        <Link to="/api">Go To HomePage</Link>
-      </button>
+      <ColorButton>
+        <Link style={{ textDecoration: "none", color: "white" }} to="/api">
+          Go To HomePage
+        </Link>
+      </ColorButton>
       <ul>
         {blogArray.map((blog) => (
           <BlogList

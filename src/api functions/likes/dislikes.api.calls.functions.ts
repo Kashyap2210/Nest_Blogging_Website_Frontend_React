@@ -1,14 +1,9 @@
 import axios, { AxiosResponse } from "axios";
 import { IBlogLikesCounterEntity, LikeStatus } from "blog-common-1.0";
 import { getJwt } from "../../helpers/helper";
-import { handleSubmitForBlogGetById } from "../blogs.api.calls.function";
+import { handleSubmitForBlogGetById } from "../blogs/blogs.api.calls.function";
 
-export const createLikeEntityApiCallFunction = async (
-  blogId: number,
-//   setLikesAndDislikeEntities?: React.Dispatch<
-//     React.SetStateAction<IBlogLikesCounterEntity[]>
-//   >
-) => {
+export const createLikeEntityApiCallFunction = async (blogId: number) => {
   console.log("inside the like function");
   try {
     const likeResponse: AxiosResponse<IBlogLikesCounterEntity> =
@@ -25,13 +20,7 @@ export const createLikeEntityApiCallFunction = async (
         }
       );
 
-    // if (setLikesAndDislikeEntities) {
-    //   setLikesAndDislikeEntities((prevLikes) => [
-    //     ...(prevLikes || []),
-    //     likeResponse.data,
-    //   ]);
-    // }
-    return likeResponse.data; // ✅ Now it returns the created like entity
+    return likeResponse.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
       console.error(error.response?.data);
@@ -41,12 +30,7 @@ export const createLikeEntityApiCallFunction = async (
   }
 };
 
-export const createDislikeEntityApiCallFunction = async (
-  blogId: number,
-//   setLikesAndDislikeEntities?: React.Dispatch<
-//     React.SetStateAction<IBlogLikesCounterEntity[]>
-//   >
-) => {
+export const createDislikeEntityApiCallFunction = async (blogId: number) => {
   console.log("inside the like function");
   try {
     const dislikeResponse: AxiosResponse<IBlogLikesCounterEntity> =
@@ -63,13 +47,7 @@ export const createDislikeEntityApiCallFunction = async (
         }
       );
 
-    // if (setLikesAndDislikeEntities) {
-    //   setLikesAndDislikeEntities((prevLikes) => [
-    //     ...(prevLikes || []),
-    //     dislikeResponse.data,
-    //   ]);
-    // }
-    return dislikeResponse.data; // ✅ Now it returns the created like entity
+    return dislikeResponse.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
       console.error(error.response?.data);

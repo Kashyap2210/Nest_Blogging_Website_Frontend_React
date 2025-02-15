@@ -1,22 +1,41 @@
-import axios, { AxiosResponse } from 'axios';
-import { IUserCreateDto, IUserEntity, UserGender } from 'blog-common-1.0';
-import { useState } from 'react';
+import { CloudUploadOutlined } from "@mui/icons-material";
+import { Button } from "@mui/material";
+import axios from "axios";
+import { IUserCreateDto, IUserEntity, UserGender } from "blog-common-1.0";
+import { useState } from "react";
+import { Link } from "react-router";
+import { createUserApiCallFunction } from "../api functions/users/users.api.calls.functions";
+import {
+  ColorButton,
+  VisuallyHiddenInput,
+} from "../styling functions/button.style.function";
 
 export default function UserCreate() {
-  const [formData, setFormData] = useState<IUserCreateDto>({
-    name: '',
-    username: '',
-    password: '',
-    emailId: '',
-    contactNo: '',
-    profilePictureUrl: '',
+  const [userData, setUserData] = useState<IUserCreateDto>({
+    name: "",
+    username: "",
+    password: "",
+    emailId: "",
+    contactNo: "",
     gender: UserGender.PREFER_NOT_TO_SAY,
   });
+  const [file, setFile] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [newUser, setNewUser] = useState<IUserCreateDto | null>(null);
+
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault();
+    if (e.target.files && e.target.files.length) {
+      setFile(e.target.files[0]); // Get the first file selected
+
+      const fileUrl = URL.createObjectURL(e.target.files[0]);
+      setPreviewUrl(fileUrl);
+    }
+  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData((previousData) => ({
+    setUserData((previousData) => ({
       ...previousData,
       [name]: value,
     }));
@@ -24,21 +43,35 @@ export default function UserCreate() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log('this is the user data: ', formData);
+    console.log("this is the user data: ");
     try {
-      const response: AxiosResponse<IUserEntity> = await axios.post(
-        'http://localhost:3000/api/users',
-        formData
-      );
-      console.log('this is the response from backend', response);
-      const { data } = response;
-      console.log('this is the new user create', data);
-      setNewUser(data);
+      if (!file) {
+        console.log("file should be there");
+      }
+
+      const formData = new FormData();
+
+      if (file) {
+        formData.append("file", file);
+      }
+      Object.entries(userData).forEach(([key, value]) => {
+        if (typeof value === "string") {
+          formData.append(key, value);
+        } else if (value !== undefined && value !== null) {
+          formData.append(key, String(value)); // Convert non-string values to string
+        }
+      });
+
+      const newUser: IUserEntity = await createUserApiCallFunction(formData);
+      // console.log("this is the response from backend", response);
+      // const { data } = response;
+      console.log("this is the new user create", newUser);
+      setNewUser(newUser);
     } catch (error) {
       if (axios.isAxiosError(error)) {
         console.error(error.response?.data); // Log the backend error response
       } else {
-        console.error('Unexpected error:', error);
+        console.error("Unexpected error:", error);
       }
     }
   };
@@ -52,7 +85,7 @@ export default function UserCreate() {
           type="text"
           name="name"
           placeholder="Name"
-          value={formData.name}
+          value={userData.name}
           onChange={handleChange}
         />
         <br />
@@ -62,7 +95,7 @@ export default function UserCreate() {
           type="text"
           name="username"
           placeholder="Username"
-          value={formData.username}
+          value={userData.username}
           onChange={handleChange}
         />
         <br />
@@ -72,7 +105,7 @@ export default function UserCreate() {
           type="text"
           name="password"
           placeholder="Password"
-          value={formData.password}
+          value={userData.password}
           onChange={handleChange}
         />
         <br />
@@ -82,7 +115,7 @@ export default function UserCreate() {
           type="text"
           name="emailId"
           placeholder="EmailId"
-          value={formData.emailId}
+          value={userData.emailId}
           onChange={handleChange}
         />
         <br />
@@ -92,27 +125,51 @@ export default function UserCreate() {
           type="text"
           name="contactNo"
           placeholder="Contact Number"
-          value={formData.contactNo}
+          value={userData.contactNo}
           onChange={handleChange}
         />
-        <br />
+        {/* <br />
         <br />
         <br />
         <input
           type="text"
           name="profilePictureUrl"
           placeholder="Profile Picture"
-          value={formData.profilePictureUrl}
+          value={userData.profilePictureUrl}
           onChange={handleChange}
-        />
+        /> */}
+        <br />
+        <br />
+        <br />
+        <Button
+          component="label"
+          role={undefined}
+          variant="contained"
+          tabIndex={-1}
+          startIcon={<CloudUploadOutlined />}
+        >
+          Upload files
+          <VisuallyHiddenInput
+            type="file"
+            // name="file"
+            // placeholder="Profile Picture File"
+            onChange={handleFileUpload}
+          />
+        </Button>
+        {/* <input
+          type="file"
+          name="file"
+          placeholder="Profile Picture File"
+          onChange={handleFileUpload}
+        /> */}
         <br />
         <br />
         <br />
         <select
           name="gender"
-          value={formData.gender}
+          value={userData.gender}
           onChange={(e) =>
-            setFormData({ ...formData, gender: e.target.value as UserGender })
+            setUserData({ ...userData, gender: e.target.value as UserGender })
           }
         >
           <option value={UserGender.MALE}>Male</option>
@@ -122,12 +179,23 @@ export default function UserCreate() {
           </option>
         </select>
         <br />
-        <button type="submit">Create User</button>
+        <br />
+        <ColorButton type="submit">Create User</ColorButton>
       </form>
+      <br />
+      <br />
+      <ColorButton>
+        <Link style={{ textDecoration: "none", color: "white" }} to="/api">
+          Go To HomePage
+        </Link>
+      </ColorButton>
       {newUser && (
         <div>
           <h2>Welcome {newUser.name}</h2>
         </div>
+      )}
+      {previewUrl && (
+        <img src={previewUrl} alt="Preview URL" width="200px" height="200px" />
       )}
     </div>
   );

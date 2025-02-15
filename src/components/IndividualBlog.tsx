@@ -1,27 +1,41 @@
 import {
   IBlogLikesCounterEntity,
+  ICommentCreateDto,
   ICommentEntity,
   LikeStatus,
 } from "blog-common-1.0";
 import { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router";
-import { handleSubmitForBlogGetById } from "../api functions/blogs.api.calls.function";
+import { Link, useLocation } from "react-router";
+import { handleSubmitForBlogGetById } from "../api functions/blogs/blogs.api.calls.function";
+import { createCommentApiCallFunction } from "../api functions/comments/comments.api.calls.function";
 import {
   changeLikeStatusApiCallFunction,
   createDislikeEntityApiCallFunction,
   createLikeEntityApiCallFunction,
 } from "../api functions/likes/dislikes.api.calls.functions";
 import { IBlogListProps } from "../interfaces/blog_list_prop.interface";
+import {
+  ColorButton,
+  DislikeButton,
+  GetAllButton,
+  LikeButton,
+} from "../styling functions/button.style.function";
+import Comments from "./CommentsU";
 
 export default function IndividualBlog() {
-  // const [comment, setComments] = useState<ICommentEntity[]>([]);
+  const [allComments, setAllComment] = useState<ICommentEntity[]>([]);
   const [likesAndDislikeEntities, setLikesAndDislikeEntities] = useState<
     IBlogLikesCounterEntity[]
   >([]);
 
   const location = useLocation();
-  const navigate = useNavigate();
   const { blog, likes, comments }: IBlogListProps = location.state || {};
+
+  const [isCommentFormVisible, setIsCommentFormVisible] = useState(false);
+  const [newComment, setNewComment] = useState<ICommentCreateDto>({
+    text: "",
+    blogId: 0,
+  });
 
   useEffect(() => {
     if (likes) {
@@ -29,7 +43,13 @@ export default function IndividualBlog() {
     }
   }, [likes]);
 
-  console.log("this is the state details", blog, likes, comments);
+  useEffect(() => {
+    if (comments) {
+      setAllComment(comments);
+    }
+  }, [likes]);
+
+  // console.log("this is the state details", blog, likes, comments);
 
   if (!blog) {
     return <p>No blog data available</p>;
@@ -44,8 +64,15 @@ export default function IndividualBlog() {
         blog.id
       );
 
+      // console.log("this is the updated blog", updatedBlog);
+
       if (updatedBlog?.likes) {
         setLikesAndDislikeEntities(updatedBlog.likes);
+      }
+
+      if (updatedBlog?.comments) {
+        // console.log("Updated comments from API:", updatedBlog.comments); // Debugging
+        setAllComment(updatedBlog.comments);
       }
     } catch (error) {
       console.error("Failed to fetch updated blog data", error);
@@ -68,7 +95,7 @@ export default function IndividualBlog() {
   };
 
   const dislikeBlog = async () => {
-    console.log("inside the like function");
+    // console.log("inside the like function");
     try {
       const newDislike = await createDislikeEntityApiCallFunction(blog.id);
 
@@ -98,6 +125,37 @@ export default function IndividualBlog() {
     } catch (error) {}
   };
 
+  const createComment = async () => {
+    // console.log("inside the create comment function");
+    if (!blog?.id) {
+      console.error("Blog id is required");
+      return;
+    }
+
+    try {
+      const newCommentData = {
+        blogId: blog.id,
+        text: newComment?.text,
+      };
+
+      const createdComment = await createCommentApiCallFunction(newCommentData);
+      if (createdComment) {
+        // setComment((previousComment) => [...previousComment, createdComment]);
+        setNewComment({ blogId: blog.id, text: "" });
+        setIsCommentFormVisible(false);
+        await fetchUpdatedBlogData();
+      }
+    } catch (error) {
+      console.log("this is the error", error);
+    }
+  };
+
+  const removeCommentFromState = (commentId: number) => {
+    setAllComment((prevComments) =>
+      prevComments.filter((comment) => comment.id !== commentId)
+    );
+  };
+
   const totalLikes =
     likesAndDislikeEntities?.filter(
       (like) => like.likedStatus === LikeStatus.LIKED
@@ -108,7 +166,7 @@ export default function IndividualBlog() {
       (dislike) => dislike.likedStatus === LikeStatus.DISLIKED
     ).length || 0;
 
-  console.log("this is the likesAndDislikeEntities", likesAndDislikeEntities);
+  // console.log("this is the likesAndDislikeEntities", likesAndDislikeEntities);
 
   return (
     <div>
@@ -118,24 +176,52 @@ export default function IndividualBlog() {
       <p>{blog.content}</p>
       <hr />
       <h3>Comments</h3>
-      {comments &&
-        comments.map((comment) => (
-          <div key={comment.id}>
-            <h3>{comment.text}</h3>
-            <h3>Comment created by user with id: {comment.authorId}</h3>
-          </div>
+      {allComments &&
+        allComments.map((entity) => (
+          <Comments
+            id={entity.id}
+            text={entity.text}
+            authorId={entity.authorId}
+            onDelete={removeCommentFromState}
+          />
         ))}
-      <hr />
+      <GetAllButton
+        onClick={() => setIsCommentFormVisible(!isCommentFormVisible)}
+      >
+        {isCommentFormVisible ? "Cancel" : "Add Comment"}
+      </GetAllButton>
+      {isCommentFormVisible && (
+        <div>
+          <input
+            type="text"
+            name="comment"
+            value={newComment.text}
+            onChange={(e) =>
+              setNewComment({ ...newComment, text: e.target.value })
+            }
+          />
+          <GetAllButton onClick={createComment}>Create</GetAllButton>
+        </div>
+      )}
       <h5>Total Likes: {totalLikes}</h5>
       <h5>Total Dislikes: {totalDislikes}</h5>
       <hr />
-      <button onClick={likeBlog} onDoubleClick={changeStatusToNeutral}>
+      <LikeButton onClick={likeBlog} onDoubleClick={changeStatusToNeutral}>
         Like
-      </button>{" "}
+      </LikeButton>
       &nbsp;&nbsp;
-      <button onClick={dislikeBlog} onDoubleClick={changeStatusToNeutral}>
+      <DislikeButton
+        onClick={dislikeBlog}
+        onDoubleClick={changeStatusToNeutral}
+      >
         Dislike
-      </button>
+      </DislikeButton>
+      &nbsp;&nbsp;
+      <ColorButton>
+        <Link style={{ textDecoration: "none", color: "white" }} to="/api">
+          Go To HomePage
+        </Link>
+      </ColorButton>
     </div>
   );
 }

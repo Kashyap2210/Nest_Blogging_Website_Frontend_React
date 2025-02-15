@@ -1,17 +1,25 @@
 import {
   IBlogEntity,
   IBlogLikesCounterEntity,
+  ICommentCreateDto,
   ICommentEntity,
   LikeStatus,
 } from "blog-common-1.0";
 import React, { useState } from "react";
 import { Link } from "react-router";
-import { handleSubmitForBlogGetById } from "../api functions/blogs.api.calls.function";
+import { handleSubmitForBlogGetById } from "../api functions/blogs/blogs.api.calls.function";
+import { createCommentApiCallFunction } from "../api functions/comments/comments.api.calls.function";
 import {
   changeLikeStatusApiCallFunction,
   createDislikeEntityApiCallFunction,
   createLikeEntityApiCallFunction,
 } from "../api functions/likes/dislikes.api.calls.functions";
+import Comments from "./CommentsU";
+import {
+  ColorButton,
+  DislikeButton,
+  LikeButton,
+} from "../styling functions/button.style.function";
 
 export default function BlogById() {
   const [formData, setFormData] = useState({
@@ -22,6 +30,12 @@ export default function BlogById() {
   const [likesAndDislikeEntities, setLikesAndDislikeEntities] = useState<
     IBlogLikesCounterEntity[]
   >([]);
+
+  const [isCommentFormVisible, setIsCommentFormVisible] = useState(false);
+  const [newComment, setNewComment] = useState<ICommentCreateDto>({
+    text: "",
+    blogId: 0,
+  });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -34,12 +48,18 @@ export default function BlogById() {
   const handleSubmitForBlogById = async (
     e: React.FormEvent<HTMLFormElement>
   ) => {
-    await handleSubmitForBlogGetById(
-      e,
-      formData.blogId,
-      setBlog,
-      setComments,
-      setLikesAndDislikeEntities
+    const response = await handleSubmitForBlogGetById(e, formData.blogId);
+
+    if (response) {
+      setBlog(response.blog);
+      setComments(response.comments);
+      setLikesAndDislikeEntities(response.likes);
+    }
+  };
+
+  const removeCommentFromState = (commentId: number) => {
+    setComments((prevComments) =>
+      prevComments.filter((comment) => comment.id !== commentId)
     );
   };
 
@@ -64,7 +84,7 @@ export default function BlogById() {
     }
   };
   const dislikeBlog = async () => {
-    console.log("inside the like function");
+    // console.log("inside the like function");
     try {
       const newDislike = await createDislikeEntityApiCallFunction(
         formData.blogId
@@ -82,7 +102,7 @@ export default function BlogById() {
   };
 
   const changeStatusToNeutral = async () => {
-    console.log("inside the double click function");
+    // console.log("inside the double click function");
     try {
       await changeLikeStatusApiCallFunction(formData.blogId);
 
@@ -90,6 +110,29 @@ export default function BlogById() {
         preventDefault: () => {},
       } as React.FormEvent<HTMLFormElement>);
     } catch (error) {}
+  };
+
+  const createComment = async () => {
+    if (!blog?.id) {
+      console.error("Blog id is required");
+      return;
+    }
+
+    try {
+      const newCommentData = {
+        blogId: blog.id,
+        text: newComment?.text,
+      };
+
+      const createdComment = await createCommentApiCallFunction(newCommentData);
+      if (createdComment) {
+        setComments((previousComment) => [...previousComment, createdComment]);
+        setNewComment({ blogId: blog.id, text: "" });
+        setIsCommentFormVisible(false);
+      }
+    } catch (error) {
+      console.log("this is the error", error);
+    }
   };
 
   return (
@@ -104,20 +147,22 @@ export default function BlogById() {
         />
         <br />
         <br />
-        <button type="submit">Get Blog</button>
+        <ColorButton type="submit">Get Blog</ColorButton>
       </form>
       <br />
       <br />
       <br />
       <br />
-      <button>
-        <Link to="/api">Go To HomePage</Link>
-      </button>
+      <ColorButton>
+        <Link style={{ textDecoration: "none", color: "white" }} to="/api">
+          Go To HomePage
+        </Link>
+      </ColorButton>
       <br />
       <br />
       <br />
       <br />
-      <hr />
+      {/* <hr /> */}
       {blog && (
         <div>
           <h1>{blog.title}</h1>
@@ -133,11 +178,32 @@ export default function BlogById() {
       <h2>Comments</h2>
       {comment &&
         comment.map((mapping) => (
-          <div key={mapping.id}>
-            <h3>{mapping.text}</h3>
-            <h4>{mapping.authorId}</h4>
-          </div>
+          <Comments
+            id={mapping.id}
+            text={mapping.text}
+            authorId={mapping.authorId}
+            onDelete={removeCommentFromState}
+          />
         ))}
+      <ColorButton
+        onClick={() => setIsCommentFormVisible(!isCommentFormVisible)}
+      >
+        {isCommentFormVisible ? "Cancel" : "Add Comment"}
+      </ColorButton>
+
+      {isCommentFormVisible && (
+        <div>
+          <input
+            type="text"
+            name="comment"
+            value={newComment.text}
+            onChange={(e) =>
+              setNewComment({ ...newComment, text: e.target.value })
+            }
+          />
+          <button onClick={createComment}>Create</button>
+        </div>
+      )}
       <br />
       <br />
       <hr />
@@ -148,14 +214,17 @@ export default function BlogById() {
         </div>
       )}
 
-      <button onClick={likeBlog} onDoubleClick={changeStatusToNeutral}>
+      <LikeButton onClick={likeBlog} onDoubleClick={changeStatusToNeutral}>
         Like
-      </button>
+      </LikeButton>
       <br />
       <br />
-      <button onClick={dislikeBlog} onDoubleClick={changeStatusToNeutral}>
+      <DislikeButton
+        onClick={dislikeBlog}
+        onDoubleClick={changeStatusToNeutral}
+      >
         Dislike
-      </button>
+      </DislikeButton>
     </>
   );
 }

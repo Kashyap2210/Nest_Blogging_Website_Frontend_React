@@ -6,13 +6,6 @@ export default function BlogList({ blog, likes, comments }: IBlogListProps) {
   const navigate = useNavigate();
 
   const viewIndividualBlog = () => {
-    console.log("navigating to view individual blog");
-    console.log(
-      "this are the state details from BlogList component",
-      blog,
-      likes,
-      comments
-    );
     navigate("/api/readIndividualBlog", {
       state: { blog, likes, comments },
     });

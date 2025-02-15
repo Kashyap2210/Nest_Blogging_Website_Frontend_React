@@ -1,8 +1,9 @@
 import { IBlogCreateDto } from "blog-common-1.0";
 import React, { useState } from "react";
-import { useNavigate } from "react-router";
-import { createBlogApiCallFunction } from "../api functions/blogs.api.calls.function";
+import { Link } from "react-router";
+import { createBlogApiCallFunction } from "../api functions/blogs/blogs.api.calls.function";
 import { getJwt } from "../helpers/helper";
+import { ColorButton } from "../styling functions/button.style.function";
 
 export default function BlogCreate() {
   const [formData, setFormData] = useState<IBlogCreateDto>({
@@ -26,45 +27,13 @@ export default function BlogCreate() {
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    await createBlogApiCallFunction(e, formData, setNewBlog);
-
-    // e.preventDefault();
-    // console.log('this is the blog data', formData);
-
-    // const token: string | null = getJwt();
-
-    // try {
-    //   const response: AxiosResponse<IBlogEntity> = await axios.post(
-    //     'http://localhost:3000/api/blog',
-    //     formData, {
-    //     headers: {
-    //       Authorization: `Bearer ${token}`, // Add token to header
-    //     }
-    //   }
-    //   );
-    //   console.log('this is the response', response);
-    //   const { data } = response;
-    //   console.log('this is the new blog', data);
-    //   setNewBlog(data);
-    // } catch (error) {
-    //   if (axios.isAxiosError(error)) {
-    //     // console.log("this is the response", response)
-    //     console.error(error.response?.data); // Log the backend error response
-    //   } else {
-    //     console.error('Unexpected error:', error);
-    //   }
-    // }
-  };
-
-  const routeToUpdateBlog = () => {
-    console.log("click event for routing to update blog page");
-    const navigate = useNavigate();
-    navigate("/api/updateBlog");
+    const newBlog = await createBlogApiCallFunction(e, formData);
+    if (newBlog) setNewBlog(newBlog);
   };
 
   return (
     <>
-      <div>this is the container to create blogs</div>
+      <h2>Create New Blog</h2>
       <form onSubmit={handleSubmit}>
         <input
           type="title"
@@ -96,14 +65,19 @@ export default function BlogCreate() {
         <br />
         <br />
         <br />
-        <button type="submit">Create Blog</button>
+        <ColorButton type="submit">Create Blog</ColorButton>
       </form>
+      <br />
+      <br />
 
-      <button onClick={routeToUpdateBlog}>
-        {/* <Link to={"/api/updateBlog"}> */}
-        Update Blog
-        {/* </Link> */}
-      </button>
+      {/* <ColorButton onClick={routeToUpdateBlog}>
+        <link to={"/api/updateBlog"}>Update Blog</link>
+      </ColorButton> */}
+      <ColorButton>
+        <Link style={{ textDecoration: "none", color: "white" }} to="/api">
+          Go To HomePage
+        </Link>
+      </ColorButton>
 
       {newBlog && (
         <div>
