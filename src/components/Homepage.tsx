@@ -35,7 +35,7 @@ export default function HomePage() {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen text-left border">
       <div className="mb-4">
-        <h1 className="text-4xl font-bold text-red-500">Homepage!</h1>{" "}
+        <h1 className="text-4xl font-bold text-red-500">Homepage!</h1>
       </div>
       <div className="">
         <ColorButton onClick={handleLogin} variant="contained" color="success">
