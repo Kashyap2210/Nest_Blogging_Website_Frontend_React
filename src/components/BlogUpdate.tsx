@@ -62,58 +62,55 @@ export default function BlogUpdate() {
   };
 
   return (
-    <>
-      <h2>Update specific blog with Id</h2>
-      <form onSubmit={handleSubmit}>
-        <input
-          type="number"
-          name="id"
-          placeholder="Blog ID"
-          value={id || ""}
-          onChange={handleIdChange} // Separate handler for ID
-        />
-        <br />
-        <br />
-        <br />
-        <input
-          type="text"
-          name="title"
-          placeholder="Blog title"
-          value={formData?.title}
-          onChange={handleChange}
-        />
-        <br />
-        <br />
-        <br />
-        <input
-          type="text"
-          name="content"
-          placeholder="Blog content"
-          value={formData?.content}
-          onChange={handleChange}
-        />
-        <br />
-        <br />
-        <br />
-        <input
-          type="text"
-          name="keywords"
-          placeholder="Blog keywords"
-          value={formData?.keywords}
-          onChange={handleChange}
-        />
-        <br />
-        <br />
-        <br />
-        <ColorButton type="submit">Update Blog</ColorButton>
-        <br />
-        <br />
-        <ColorButton>
+    <div className="flex flex-col items-center justify-center min-h-screen text-left">
+      <h2 className="text-4xl font-bold text-red-500 mb-4">
+        Update specific blog with Id
+      </h2>
+      <div>
+        <form
+          onSubmit={handleSubmit}
+          className="border p-8 flex flex-col gap-8 mb-8"
+        >
+          <input
+            type="number"
+            name="id"
+            placeholder="Blog ID"
+            value={id || ""}
+            onChange={handleIdChange} // Separate handler for ID
+            className="border px-4"
+          />
+          <input
+            type="text"
+            name="title"
+            placeholder="Blog title"
+            value={formData?.title}
+            onChange={handleChange}
+            className="border px-4"
+          />
+          <input
+            type="text"
+            name="content"
+            placeholder="Blog content"
+            value={formData?.content}
+            onChange={handleChange}
+            className="border px-4"
+          />
+          <input
+            type="text"
+            name="keywords"
+            placeholder="Blog keywords"
+            value={formData?.keywords}
+            onChange={handleChange}
+            className="border px-4"
+          />
+          <ColorButton type="submit">Update Blog</ColorButton>
+        </form>
+        <ColorButton className="w-full block text-center">
           <Link style={{ textDecoration: "none", color: "white" }} to="/api">
             Go To HomePage
           </Link>
         </ColorButton>
-      </form>
+      </div>
       {updatedBlog && (
         <div>
           <h3>Updated Blog:</h3>
@@ -122,6 +119,6 @@ export default function BlogUpdate() {
           <p>Keywords: {updatedBlog.keywords}</p>
         </div>
       )}
-    </>
+    </div>
   );
 }
