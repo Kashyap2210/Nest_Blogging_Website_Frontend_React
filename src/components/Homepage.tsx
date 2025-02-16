@@ -33,31 +33,35 @@ export default function HomePage() {
   };
 
   return (
-    <div>
-      <h1 className="text-4xl font-bold text-red-500">Homepage!</h1>{" "}
-      <ColorButton onClick={handleLogin} variant="contained" color="success">
-        Login
-      </ColorButton>
-      <br />
-      <br />
-      <ColorButton onClick={handleCreateBlog}>Create Blog</ColorButton>
-      <br />
-      <br />
-      <ColorButton onClick={handleUpdateBlog}>Update Blog</ColorButton>
-      <br />
-      <br />
-      <ColorButton onClick={handleCreateUser}>Create User</ColorButton>
-      <br />
-      <br />
-      <ColorButton onClick={handleCreateComment}>Create Comment</ColorButton>
-      <br />
-      <br />
-      <ColorButton onClick={handleBlogById}>Get Blog By Id</ColorButton>
-      <br />
-      <br />
-      <ColorButton onClick={handleAllBlogs}>Get All Blogs</ColorButton>
-      <br />
-      <br />
+    <div className="flex flex-col items-center justify-center min-h-screen text-left border">
+      <div className="mb-4">
+        <h1 className="text-4xl font-bold text-red-500">Homepage!</h1>{" "}
+      </div>
+      <div className="">
+        <ColorButton onClick={handleLogin} variant="contained" color="success">
+          Login
+        </ColorButton>
+        <br />
+        <br />
+        <ColorButton onClick={handleCreateBlog}>Create Blog</ColorButton>
+        <br />
+        <br />
+        <ColorButton onClick={handleUpdateBlog}>Update Blog</ColorButton>
+        <br />
+        <br />
+        <ColorButton onClick={handleCreateUser}>Create User</ColorButton>
+        <br />
+        <br />
+        <ColorButton onClick={handleCreateComment}>Create Comment</ColorButton>
+        <br />
+        <br />
+        <ColorButton onClick={handleBlogById}>Get Blog By Id</ColorButton>
+        <br />
+        <br />
+        <ColorButton onClick={handleAllBlogs}>Get All Blogs</ColorButton>
+        <br />
+        <br />
+      </div>
     </div>
   );
 }
