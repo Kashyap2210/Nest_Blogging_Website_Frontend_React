@@ -20,10 +20,6 @@ export default function HomePage() {
     navigate("/api/createUser");
   };
 
-  const handleCreateComment = () => {
-    navigate("/api/createComment");
-  };
-
   const handleBlogById = () => {
     navigate("/api/getBlogById");
   };
@@ -50,9 +46,6 @@ export default function HomePage() {
         <br />
         <br />
         <ColorButton onClick={handleCreateUser}>Create User</ColorButton>
-        <br />
-        <br />
-        <ColorButton onClick={handleCreateComment}>Create Comment</ColorButton>
         <br />
         <br />
         <ColorButton onClick={handleBlogById}>Get Blog By Id</ColorButton>
