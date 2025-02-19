@@ -159,17 +159,13 @@ export default function BlogById() {
         <hr />
         {blog && (
           <div className="border my-8">
-            <div className="h-12">
-              <p className="border">{blog.title}</p>
+            <div className="h-12 mb-4 bg-red-200 border flex justify-start items-center">
+              {blog.title}
             </div>
-            <div className="h-4">
-              <p className="border">{blog.keywords}</p>
-            </div>
-            <div className="h-40 my-8 border">
-              <p>{blog.content}</p>
-            </div>
-            <div className="h-8">
-              <p>{blog.author}</p>
+            <div className="h-12 bg-blue-200 border">{blog.keywords}</div>
+            <div className="h-40 my-8 border bg-blue-200">{blog.content}</div>
+            <div className="h-8 border flex justify-start items-center">
+              {blog.author}
             </div>
             {/* <h6>{blog.createdBy}</h6> */}
           </div>
@@ -214,17 +210,24 @@ export default function BlogById() {
           </div>
         )}
 
-        <LikeButton onClick={likeBlog} onDoubleClick={changeStatusToNeutral}>
-          Like
-        </LikeButton>
-        <br />
-        <br />
-        <DislikeButton
-          onClick={dislikeBlog}
-          onDoubleClick={changeStatusToNeutral}
-        >
-          Dislike
-        </DislikeButton>
+        <div className=" flex mt-4">
+          <div className="mr-4">
+            <LikeButton
+              onClick={likeBlog}
+              onDoubleClick={changeStatusToNeutral}
+            >
+              Like
+            </LikeButton>
+          </div>
+          <div className="">
+            <DislikeButton
+              onClick={dislikeBlog}
+              onDoubleClick={changeStatusToNeutral}
+            >
+              Dislike
+            </DislikeButton>
+          </div>
+        </div>
       </div>
     </>
   );
