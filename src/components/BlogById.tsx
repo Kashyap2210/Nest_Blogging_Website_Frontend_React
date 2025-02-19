@@ -137,8 +137,8 @@ export default function BlogById() {
 
   return (
     <>
-      <div className="p-4">
-        <div className="flex gap-4 h-8">
+      <div className="p-4  min-h-screen">
+        <div className="flex gap-4 h-8 mb-4">
           <form onSubmit={handleSubmitForBlogById}>
             <input
               type="text"
@@ -146,7 +146,7 @@ export default function BlogById() {
               name="blogId"
               value={formData?.blogId}
               onChange={handleChange}
-              className="border h-8"
+              className="h-8 border rounded-sm pl-2"
             />
           </form>
           <ColorButton type="submit">Get Blog</ColorButton>
@@ -156,52 +156,54 @@ export default function BlogById() {
             </Link>
           </ColorButton>
         </div>
-        <hr />
         {blog && (
-          <div className="border my-8">
-            <div className="h-12 mb-4 bg-red-200 border flex justify-start items-center">
+          <div className="my-4">
+            <div className="h-20 mb-4 flex justify-start items-center text-4xl font-semibold">
               {blog.title}
             </div>
-            <div className="h-12 bg-blue-200 border">{blog.keywords}</div>
-            <div className="h-40 my-8 border bg-blue-200">{blog.content}</div>
-            <div className="h-8 border flex justify-start items-center">
-              {blog.author}
+            <div className="h-12 ">{blog.keywords}</div>
+            <div className="text-justify">{blog.content}</div>
+            <div className="h-8 flex justify-start items-center text-2xl mt-4">
+              <span className="">Written By, </span>
+              <span className="italic font-semibold">&nbsp;{blog.author}</span>
             </div>
-            {/* <h6>{blog.createdBy}</h6> */}
           </div>
         )}
         <hr />
-        <h2>Comments</h2>
-        {comment &&
-          comment.map((mapping) => (
-            <Comments
-              id={mapping.id}
-              text={mapping.text}
-              authorId={mapping.authorId}
-              onDelete={removeCommentFromState}
-            />
-          ))}
-        <ColorButton
-          onClick={() => setIsCommentFormVisible(!isCommentFormVisible)}
-        >
-          {isCommentFormVisible ? "Cancel" : "Add Comment"}
-        </ColorButton>
+        <h2 className="mb-2">Comments</h2>
+        <div className="mb-4">
+          {comment &&
+            comment.map((mapping) => (
+              <Comments
+                id={mapping.id}
+                text={mapping.text}
+                authorId={mapping.authorId}
+                onDelete={removeCommentFromState}
+              />
+            ))}
+        </div>
+        <div className="flex gap-4 mb-8">
+          {isCommentFormVisible && (
+            <div className="flex justify-start items-center gap-4">
+              <input
+                type="text"
+                name="comment"
+                value={newComment.text}
+                onChange={(e) =>
+                  setNewComment({ ...newComment, text: e.target.value })
+                }
+                className="border rounded-sm h-9"
+              />
+              <LikeButton onClick={createComment}>Create</LikeButton>
+            </div>
+          )}
+          <ColorButton
+            onClick={() => setIsCommentFormVisible(!isCommentFormVisible)}
+          >
+            {isCommentFormVisible ? "Cancel" : "Add Comment"}
+          </ColorButton>
+        </div>
 
-        {isCommentFormVisible && (
-          <div>
-            <input
-              type="text"
-              name="comment"
-              value={newComment.text}
-              onChange={(e) =>
-                setNewComment({ ...newComment, text: e.target.value })
-              }
-            />
-            <button onClick={createComment}>Create</button>
-          </div>
-        )}
-        <br />
-        <br />
         <hr />
         {likesAndDislikeEntities && (
           <div>
