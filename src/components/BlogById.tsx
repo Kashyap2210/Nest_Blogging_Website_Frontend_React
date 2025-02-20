@@ -48,6 +48,7 @@ export default function BlogById() {
   const handleSubmitForBlogById = async (
     e: React.FormEvent<HTMLFormElement>
   ) => {
+    e.preventDefault();
     const response = await handleSubmitForBlogGetById(e, formData.blogId);
 
     if (response) {
@@ -137,7 +138,7 @@ export default function BlogById() {
 
   return (
     <>
-      <div className="p-4  min-h-screen">
+      <div className="p-4  min-h-screen bg-black text-white">
         <div className="flex gap-4 h-8 mb-4">
           <form onSubmit={handleSubmitForBlogById}>
             <input
@@ -149,7 +150,14 @@ export default function BlogById() {
               className="h-8 border rounded-sm pl-2"
             />
           </form>
-          <ColorButton type="submit">Get Blog</ColorButton>
+          <ColorButton
+            type="submit"
+            onClick={() =>
+              handleSubmitForBlogById({ preventDefault: () => {} } as any)
+            }
+          >
+            Get Blog
+          </ColorButton>
           <ColorButton>
             <Link style={{ textDecoration: "none", color: "white" }} to="/api">
               Go To HomePage
@@ -171,17 +179,17 @@ export default function BlogById() {
         )}
         <hr />
         <h2 className="mb-2">Comments</h2>
-        <div className="mb-4">
-          {comment &&
-            comment.map((mapping) => (
+        {comment &&
+          comment.map((mapping) => (
+            <div className="mb-4" key={mapping.id}>
               <Comments
                 id={mapping.id}
                 text={mapping.text}
                 authorId={mapping.authorId}
                 onDelete={removeCommentFromState}
               />
-            ))}
-        </div>
+            </div>
+          ))}
         <div className="flex gap-4 mb-8">
           {isCommentFormVisible && (
             <div className="flex justify-start items-center gap-4">
