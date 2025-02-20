@@ -138,7 +138,7 @@ export default function BlogById() {
 
   return (
     <>
-      <div className="p-4  min-h-screen bg-black text-white">
+      <div className="p-4  min-h-screen">
         <div className="flex gap-4 h-8 mb-4">
           <form onSubmit={handleSubmitForBlogById}>
             <input
