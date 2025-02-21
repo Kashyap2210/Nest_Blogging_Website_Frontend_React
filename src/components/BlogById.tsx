@@ -5,7 +5,7 @@ import {
   ICommentEntity,
   LikeStatus,
 } from "blog-common-1.0";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Link } from "react-router";
 import { handleSubmitForBlogGetById } from "../api functions/blogs/blogs.api.calls.function";
 import { createCommentApiCallFunction } from "../api functions/comments/comments.api.calls.function";
@@ -14,14 +14,17 @@ import {
   createDislikeEntityApiCallFunction,
   createLikeEntityApiCallFunction,
 } from "../api functions/likes/dislikes.api.calls.functions";
-import Comments from "./CommentsU";
+import { AuthContext } from "../context/AuthContext";
 import {
   ColorButton,
   DislikeButton,
   LikeButton,
 } from "../styling functions/button.style.function";
+import Comments from "./CommentsU";
 
 export default function BlogById() {
+  const { user } = useContext(AuthContext);
+
   const [formData, setFormData] = useState({
     blogId: 0,
   });
@@ -49,7 +52,10 @@ export default function BlogById() {
     e: React.FormEvent<HTMLFormElement>
   ) => {
     e.preventDefault();
+
     const response = await handleSubmitForBlogGetById(e, formData.blogId);
+
+    console.log("this is the user", user);
 
     if (response) {
       setBlog(response.blog);
@@ -177,8 +183,8 @@ export default function BlogById() {
             </div>
           </div>
         )}
-        <hr />
-        <h2 className="mb-2">Comments</h2>
+
+        <h2 className="mb-2 text-3xl font-semibold">Comments</h2>
         {comment &&
           comment.map((mapping) => (
             <div className="mb-4" key={mapping.id}>
@@ -186,6 +192,7 @@ export default function BlogById() {
                 id={mapping.id}
                 text={mapping.text}
                 authorId={mapping.authorId}
+                currentUser={user}
                 onDelete={removeCommentFromState}
               />
             </div>
@@ -200,7 +207,7 @@ export default function BlogById() {
                 onChange={(e) =>
                   setNewComment({ ...newComment, text: e.target.value })
                 }
-                className="border rounded-sm h-9"
+                className="border rounded-sm h-9 p-2"
               />
               <LikeButton onClick={createComment}>Create</LikeButton>
             </div>
