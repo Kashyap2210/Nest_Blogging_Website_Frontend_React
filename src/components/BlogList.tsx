@@ -2,12 +2,17 @@ import { LikeStatus } from "blog-common-1.0";
 import { IBlogListProps } from "../interfaces/blog_list_prop.interface";
 import { useNavigate } from "react-router";
 
-export default function BlogList({ blog, likes, comments }: IBlogListProps) {
+export default function BlogList({
+  blog,
+  likes,
+  comments,
+  users,
+}: IBlogListProps) {
   const navigate = useNavigate();
 
   const viewIndividualBlog = () => {
     navigate("/api/readIndividualBlog", {
-      state: { blog, likes, comments },
+      state: { blog, likes, comments, users },
     });
   };
 
@@ -19,7 +24,7 @@ export default function BlogList({ blog, likes, comments }: IBlogListProps) {
       .length || 0;
 
   return (
-    <div>
+    <div className="">
       <hr />
       <h2
         onClick={viewIndividualBlog}
