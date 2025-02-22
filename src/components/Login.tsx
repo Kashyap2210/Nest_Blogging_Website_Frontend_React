@@ -6,7 +6,10 @@ import { useAuth } from "../context/AuthProvider";
 import { ColorButton } from "../styling functions/button.style.function";
 
 export default function Login() {
-  const [formData, setFormData] = useState({ username: "", password: "" });
+  const [formData, setFormData] = useState({
+    username: "kash1997",
+    password: "kash1997",
+  });
   const [responseMessage, setResponseMessage] = useState(""); // State to store backend response message
   const [errorMessage, setErrorMessage] = useState(""); // State to store error message
 
