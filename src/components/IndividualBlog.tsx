@@ -4,7 +4,7 @@ import {
   ICommentEntity,
   LikeStatus,
 } from "blog-common-1.0";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Link, useLocation } from "react-router";
 import { handleSubmitForBlogGetById } from "../api functions/blogs/blogs.api.calls.function";
 import { createCommentApiCallFunction } from "../api functions/comments/comments.api.calls.function";
@@ -13,11 +13,11 @@ import {
   createDislikeEntityApiCallFunction,
   createLikeEntityApiCallFunction,
 } from "../api functions/likes/dislikes.api.calls.functions";
+import { AuthContext } from "../context/AuthContext";
 import { IBlogListProps } from "../interfaces/blog_list_prop.interface";
 import {
   ColorButton,
   DislikeButton,
-  GetAllButton,
   LikeButton,
 } from "../styling functions/button.style.function";
 import Comments from "./CommentsU";
@@ -29,13 +29,16 @@ export default function IndividualBlog() {
   >([]);
 
   const location = useLocation();
-  const { blog, likes, comments }: IBlogListProps = location.state || {};
+  const { blog, likes, comments, users }: IBlogListProps = location.state || {};
 
   const [isCommentFormVisible, setIsCommentFormVisible] = useState(false);
   const [newComment, setNewComment] = useState<ICommentCreateDto>({
     text: "",
     blogId: 0,
   });
+
+  console.log("this is the users", users);
+  const { user } = useContext(AuthContext);
 
   useEffect(() => {
     if (likes) {
@@ -169,54 +172,80 @@ export default function IndividualBlog() {
   // console.log("this is the likesAndDislikeEntities", likesAndDislikeEntities);
 
   return (
-    <div>
-      <h1>{blog.title}</h1>
-      <h4>{blog.keywords}</h4>
-      <h4>{blog.author}</h4>
-      <p>{blog.content}</p>
-      <hr />
-      <h3>Comments</h3>
-      {allComments &&
-        allComments.map((entity) => (
-          <Comments
-            id={entity.id}
-            text={entity.text}
-            authorId={entity.authorId}
-            onDelete={removeCommentFromState}
-          />
-        ))}
-      <GetAllButton
-        onClick={() => setIsCommentFormVisible(!isCommentFormVisible)}
-      >
-        {isCommentFormVisible ? "Cancel" : "Add Comment"}
-      </GetAllButton>
-      {isCommentFormVisible && (
-        <div>
-          <input
-            type="text"
-            name="comment"
-            value={newComment.text}
-            onChange={(e) =>
-              setNewComment({ ...newComment, text: e.target.value })
-            }
-          />
-          <GetAllButton onClick={createComment}>Create</GetAllButton>
+    <div className="p-4 min-h-screen">
+      {blog && (
+        <div className="mb-4">
+          <div className="h-20 mb-4 flex justify-start items-center text-4xl font-semibold">
+            {blog.title}
+          </div>
+          <div className="h-12 ">{blog.keywords}</div>
+          <div className="text-justify">{blog.content}</div>
+          <div className="h-8 flex justify-start items-center text-2xl mt-4">
+            <span className="">Written By, </span>
+            <span className="italic font-semibold">&nbsp;{blog.author}</span>
+          </div>
         </div>
       )}
-      <h5>Total Likes: {totalLikes}</h5>
-      <h5>Total Dislikes: {totalDislikes}</h5>
+
+      <h2 className="mb-2 text-3xl font-semibold">Comments</h2>
+      {allComments &&
+        allComments.map((mapping) => (
+          <div className="mb-4" key={mapping.id}>
+            <Comments
+              id={mapping.id}
+              text={mapping.text}
+              authorId={mapping.authorId}
+              currentUser={user}
+              onDelete={removeCommentFromState}
+            />
+          </div>
+        ))}
+
+      <div className="flex gap-4 mb-8">
+        {isCommentFormVisible && (
+          <div className="flex justify-start items-center gap-4">
+            <input
+              type="text"
+              name="comment"
+              value={newComment.text}
+              onChange={(e) =>
+                setNewComment({ ...newComment, text: e.target.value })
+              }
+              className="border rounded-sm h-9 p-2"
+            />
+            <LikeButton onClick={createComment}>Create</LikeButton>
+          </div>
+        )}
+        <ColorButton
+          onClick={() => setIsCommentFormVisible(!isCommentFormVisible)}
+        >
+          {isCommentFormVisible ? "Cancel" : "Add Comment"}
+        </ColorButton>
+      </div>
       <hr />
-      <LikeButton onClick={likeBlog} onDoubleClick={changeStatusToNeutral}>
-        Like
-      </LikeButton>
-      &nbsp;&nbsp;
-      <DislikeButton
-        onClick={dislikeBlog}
-        onDoubleClick={changeStatusToNeutral}
-      >
-        Dislike
-      </DislikeButton>
-      &nbsp;&nbsp;
+      {likesAndDislikeEntities && (
+        <div>
+          <h4>Total Likes: {totalLikes}</h4>
+          <h4>Total DisLikes: {totalDislikes}</h4>
+        </div>
+      )}
+
+      <div className=" flex mt-4 my-4">
+        <div className="mr-4">
+          <LikeButton onClick={likeBlog} onDoubleClick={changeStatusToNeutral}>
+            Like
+          </LikeButton>
+        </div>
+        <div className="">
+          <DislikeButton
+            onClick={dislikeBlog}
+            onDoubleClick={changeStatusToNeutral}
+          >
+            Dislike
+          </DislikeButton>
+        </div>
+      </div>
+
       <ColorButton>
         <Link style={{ textDecoration: "none", color: "white" }} to="/api">
           Go To HomePage
