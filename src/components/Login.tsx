@@ -6,7 +6,10 @@ import { useAuth } from "../context/AuthProvider";
 import { ColorButton } from "../styling functions/button.style.function";
 
 export default function Login() {
-  const [formData, setFormData] = useState({ username: "", password: "" });
+  const [formData, setFormData] = useState({
+    username: "kash1997",
+    password: "kash1997",
+  });
   const [responseMessage, setResponseMessage] = useState(""); // State to store backend response message
   const [errorMessage, setErrorMessage] = useState(""); // State to store error message
 
@@ -22,39 +25,34 @@ export default function Login() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
     console.log("Form Data Submitted: ", formData);
-
     try {
       // Send a POST request to the backend
       const response: AxiosResponse<IUserLoginResponse> = await axios.post(
         "http://localhost:3000/api/auth/login",
         formData
       );
-
       console.log("Backend Response: ", response.data);
-
       login(response.data);
-
       setResponseMessage("Login successful!"); // Display success message
       setErrorMessage(""); // Clear error message
     } catch (error) {
       console.error("Error submitting the form: ", error);
-
       setResponseMessage(""); // Clear success message
       setErrorMessage("Failed to login. Please try again."); // Set error message
     }
   };
 
   return (
-    <div>
-      <form onSubmit={handleSubmit}>
+    <div className="flex flex-col items-center justify-center min-h-screen text-left">
+      <form onSubmit={handleSubmit} className="border p-8">
         <input
           type="text"
           name="username"
           placeholder="username"
           value={formData.username}
           onChange={handleChange}
+          className="border px-4"
         />
         <br />
         <br />
@@ -64,11 +62,13 @@ export default function Login() {
           placeholder="password"
           value={formData.password}
           onChange={handleChange}
+          className="border px-4"
         />
         <br />
         <br />
-        <br />
-        <ColorButton type="submit">Login</ColorButton>
+        <ColorButton type="submit" className="w-full">
+          Login
+        </ColorButton>
       </form>
 
       {/* Display response or error message */}
@@ -79,16 +79,15 @@ export default function Login() {
 
       {/* Display user info if logged in */}
       {user && (
-        <div>
+        <div className="mx-auto mt-8 max-w-2xl w-full p-4 border break-all whitespace-pre-wrap overflow-x-auto">
           <h2>Welcome, {user.username}!</h2>
           <p>Email: {user.emailId}</p>
-          {/* You can also store the access token in localStorage or sessionStorage */}
           <p>Access Token: {accessToken}</p>
         </div>
       )}
       <br />
       <br />
-      <ColorButton>
+      <ColorButton className="border">
         <Link style={{ textDecoration: "none", color: "white" }} to="/api">
           Go To HomePage
         </Link>

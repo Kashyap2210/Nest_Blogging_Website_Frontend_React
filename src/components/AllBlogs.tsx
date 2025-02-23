@@ -34,25 +34,28 @@ export default function AllBlogs() {
   };
 
   return (
-    <div>
-      <GetAllButton onClick={getAllBlogs}>Get All Blogs</GetAllButton>
-      <br />
-      <br />
-      <ColorButton>
-        <Link style={{ textDecoration: "none", color: "white" }} to="/api">
-          Go To HomePage
-        </Link>
-      </ColorButton>
-      <ul>
-        {blogArray.map((blog) => (
-          <BlogList
-            key={blog.blog.id}
-            blog={blog.blog}
-            likes={blog.likes}
-            comments={blog.comments}
-          />
-        ))}
-      </ul>
+    <div className="p-4 flex flex-col gap-4">
+      <div className="flex gap-4">
+        <GetAllButton onClick={getAllBlogs}>Get All Blogs</GetAllButton>
+        <ColorButton>
+          <Link style={{ textDecoration: "none", color: "white" }} to="/api">
+            Go To HomePage
+          </Link>
+        </ColorButton>
+      </div>
+      <div>
+        <ul>
+          {blogArray.map((blog) => (
+            <BlogList
+              key={blog.blog.id}
+              blog={blog.blog}
+              likes={blog.likes}
+              comments={blog.comments}
+              users={blog.users}
+            />
+          ))}
+        </ul>
+      </div>
     </div>
   );
 }

@@ -5,7 +5,7 @@ import {
   ICommentEntity,
   LikeStatus,
 } from "blog-common-1.0";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Link } from "react-router";
 import { handleSubmitForBlogGetById } from "../api functions/blogs/blogs.api.calls.function";
 import { createCommentApiCallFunction } from "../api functions/comments/comments.api.calls.function";
@@ -14,14 +14,17 @@ import {
   createDislikeEntityApiCallFunction,
   createLikeEntityApiCallFunction,
 } from "../api functions/likes/dislikes.api.calls.functions";
-import Comments from "./CommentsU";
+import { AuthContext } from "../context/AuthContext";
 import {
   ColorButton,
   DislikeButton,
   LikeButton,
 } from "../styling functions/button.style.function";
+import Comments from "./CommentsU";
 
 export default function BlogById() {
+  const { user } = useContext(AuthContext);
+
   const [formData, setFormData] = useState({
     blogId: 0,
   });
@@ -48,7 +51,11 @@ export default function BlogById() {
   const handleSubmitForBlogById = async (
     e: React.FormEvent<HTMLFormElement>
   ) => {
+    e.preventDefault();
+
     const response = await handleSubmitForBlogGetById(e, formData.blogId);
+
+    console.log("this is the user", user);
 
     if (response) {
       setBlog(response.blog);
@@ -137,94 +144,108 @@ export default function BlogById() {
 
   return (
     <>
-      <form onSubmit={handleSubmitForBlogById}>
-        <input
-          type="text"
-          placeholder="Blog Id"
-          name="blogId"
-          value={formData?.blogId}
-          onChange={handleChange}
-        />
-        <br />
-        <br />
-        <ColorButton type="submit">Get Blog</ColorButton>
-      </form>
-      <br />
-      <br />
-      <br />
-      <br />
-      <ColorButton>
-        <Link style={{ textDecoration: "none", color: "white" }} to="/api">
-          Go To HomePage
-        </Link>
-      </ColorButton>
-      <br />
-      <br />
-      <br />
-      <br />
-      {/* <hr /> */}
-      {blog && (
-        <div>
-          <h1>{blog.title}</h1>
-          <h3>{blog.keywords}</h3>
-          <h4>{blog.content}</h4>
-          <h5>{blog.author}</h5>
-          {/* <h6>{blog.createdBy}</h6> */}
-        </div>
-      )}
-      <br />
-      <br />
-      <hr />
-      <h2>Comments</h2>
-      {comment &&
-        comment.map((mapping) => (
-          <Comments
-            id={mapping.id}
-            text={mapping.text}
-            authorId={mapping.authorId}
-            onDelete={removeCommentFromState}
-          />
-        ))}
-      <ColorButton
-        onClick={() => setIsCommentFormVisible(!isCommentFormVisible)}
-      >
-        {isCommentFormVisible ? "Cancel" : "Add Comment"}
-      </ColorButton>
-
-      {isCommentFormVisible && (
-        <div>
-          <input
-            type="text"
-            name="comment"
-            value={newComment.text}
-            onChange={(e) =>
-              setNewComment({ ...newComment, text: e.target.value })
+      <div className="p-4 min-h-screen">
+        <div className="flex gap-4 h-8">
+          <form onSubmit={handleSubmitForBlogById} className="">
+            <input
+              type="text"
+              placeholder="Blog Id"
+              name="blogId"
+              value={formData?.blogId}
+              onChange={handleChange}
+              className="h-8 border rounded-sm pl-2"
+            />
+          </form>
+          <ColorButton
+            type="submit"
+            onClick={() =>
+              handleSubmitForBlogById({ preventDefault: () => {} } as any)
             }
-          />
-          <button onClick={createComment}>Create</button>
+          >
+            Get Blog
+          </ColorButton>
+          <ColorButton>
+            <Link style={{ textDecoration: "none", color: "white" }} to="/api">
+              Go To HomePage
+            </Link>
+          </ColorButton>
         </div>
-      )}
-      <br />
-      <br />
-      <hr />
-      {likesAndDislikeEntities && (
-        <div>
-          <h4>Total Likes: {totalLikes?.length}</h4>
-          <h4>Total DisLikes: {totalDisLikes?.length}</h4>
-        </div>
-      )}
+        {blog && (
+          <div className="">
+            <div className="h-20 flex justify-start items-center text-4xl font-semibold">
+              {blog.title}
+            </div>
+            <div className="h-12">{blog.keywords}</div>
+            <div className="text-justify">{blog.content}</div>
+            <div className="h-8 flex justify-start items-center text-2xl mt-4">
+              <span className="">Written By, </span>
+              <span className="italic font-semibold">&nbsp;{blog.author}</span>
+            </div>
+          </div>
+        )}
 
-      <LikeButton onClick={likeBlog} onDoubleClick={changeStatusToNeutral}>
-        Like
-      </LikeButton>
-      <br />
-      <br />
-      <DislikeButton
-        onClick={dislikeBlog}
-        onDoubleClick={changeStatusToNeutral}
-      >
-        Dislike
-      </DislikeButton>
+        <h2 className="mb-2 text-3xl font-semibold">Comments</h2>
+        {comment &&
+          comment.map((mapping) => (
+            <div className="mb-4" key={mapping.id}>
+              <Comments
+                id={mapping.id}
+                text={mapping.text}
+                authorId={mapping.authorId}
+                currentUser={user}
+                onDelete={removeCommentFromState}
+              />
+            </div>
+          ))}
+        <div className="flex gap-4 mb-8">
+          {isCommentFormVisible && (
+            <div className="flex justify-start items-center gap-4">
+              <input
+                type="text"
+                name="comment"
+                value={newComment.text}
+                onChange={(e) =>
+                  setNewComment({ ...newComment, text: e.target.value })
+                }
+                className="border rounded-sm h-9 p-2"
+              />
+              <LikeButton onClick={createComment}>Create</LikeButton>
+            </div>
+          )}
+          <ColorButton
+            onClick={() => setIsCommentFormVisible(!isCommentFormVisible)}
+          >
+            {isCommentFormVisible ? "Cancel" : "Add Comment"}
+          </ColorButton>
+        </div>
+
+        <hr />
+        {likesAndDislikeEntities && (
+          <div>
+            <h4>Total Likes: {totalLikes?.length}</h4>
+            <h4>Total DisLikes: {totalDisLikes?.length}</h4>
+          </div>
+        )}
+
+        <div className=" flex mt-4">
+          <div className="mr-4">
+            <LikeButton
+              onClick={likeBlog}
+              onDoubleClick={changeStatusToNeutral}
+            >
+              Like
+            </LikeButton>
+          </div>
+          <div className="">
+            <DislikeButton
+              onClick={dislikeBlog}
+              onDoubleClick={changeStatusToNeutral}
+            >
+              Dislike
+            </DislikeButton>
+          </div>
+        </div>
+      </div>
     </>
   );
 }

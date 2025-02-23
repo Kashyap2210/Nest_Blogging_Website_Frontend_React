@@ -32,58 +32,54 @@ export default function BlogCreate() {
   };
 
   return (
-    <>
-      <h2>Create New Blog</h2>
-      <form onSubmit={handleSubmit}>
-        <input
-          type="title"
-          placeholder="Enter title of blog"
-          name="title"
-          value={formData.title}
-          onChange={handleChange}
-        ></input>
-        <br />
-        <br />
-        <br />
-        <input
-          type="text"
-          placeholder="content"
-          name="content"
-          value={formData.content}
-          onChange={handleChange}
-        ></input>
-        <br />
-        <br />
-        <br />
-        <input
-          type="text"
-          placeholder="keywords"
-          name="keywords"
-          value={formData.keywords}
-          onChange={handleChange}
-        ></input>
-        <br />
-        <br />
-        <br />
-        <ColorButton type="submit">Create Blog</ColorButton>
-      </form>
-      <br />
-      <br />
+    <div className="flex flex-col items-center justify-center min-h-screen text-left ">
+      <h2 className="text-4xl font-bold text-red-500 mb-4">Create New Blog</h2>
+      <div className="">
+        <form
+          onSubmit={handleSubmit}
+          className="border p-8 mb-8 flex flex-col gap-8 items-center justify-center"
+        >
+          <input
+            type="title"
+            placeholder="Enter title of blog"
+            name="title"
+            value={formData.title}
+            onChange={handleChange}
+            className="border px-4"
+          ></input>
+          <input
+            type="text"
+            placeholder="content"
+            name="content"
+            value={formData.content}
+            onChange={handleChange}
+            className="border px-4"
+          ></input>
+          <input
+            type="text"
+            placeholder="keywords"
+            name="keywords"
+            value={formData.keywords}
+            onChange={handleChange}
+            className="border px-4"
+          ></input>
+          <ColorButton type="submit" className="w-full">
+            Create Blog
+          </ColorButton>
+        </form>
 
-      {/* <ColorButton onClick={routeToUpdateBlog}>
-        <link to={"/api/updateBlog"}>Update Blog</link>
-      </ColorButton> */}
-      <ColorButton>
-        <Link style={{ textDecoration: "none", color: "white" }} to="/api">
-          Go To HomePage
-        </Link>
-      </ColorButton>
+        <ColorButton className="w-full block text-center">
+          <Link to="/api" className="">
+            Go To HomePage
+          </Link>
+        </ColorButton>
 
-      {newBlog && (
-        <div>
-          <h2>This is the title of Blog: {newBlog.title}</h2>
-        </div>
-      )}
-    </>
+        {newBlog && (
+          <div>
+            <h2>This is the title of Blog: {newBlog.title}</h2>
+          </div>
+        )}
+      </div>
+    </div>
   );
 }
