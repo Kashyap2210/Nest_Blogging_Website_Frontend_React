@@ -144,9 +144,9 @@ export default function BlogById() {
 
   return (
     <>
-      <div className="p-4  min-h-screen">
-        <div className="flex gap-4 h-8 mb-4">
-          <form onSubmit={handleSubmitForBlogById}>
+      <div className="p-4 min-h-screen">
+        <div className="flex gap-4 h-8">
+          <form onSubmit={handleSubmitForBlogById} className="">
             <input
               type="text"
               placeholder="Blog Id"
@@ -171,11 +171,11 @@ export default function BlogById() {
           </ColorButton>
         </div>
         {blog && (
-          <div className="my-4">
-            <div className="h-20 mb-4 flex justify-start items-center text-4xl font-semibold">
+          <div className="">
+            <div className="h-20 flex justify-start items-center text-4xl font-semibold">
               {blog.title}
             </div>
-            <div className="h-12 ">{blog.keywords}</div>
+            <div className="h-12">{blog.keywords}</div>
             <div className="text-justify">{blog.content}</div>
             <div className="h-8 flex justify-start items-center text-2xl mt-4">
               <span className="">Written By, </span>

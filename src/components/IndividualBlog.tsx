@@ -175,7 +175,7 @@ export default function IndividualBlog() {
     <div className="p-4 min-h-screen">
       {blog && (
         <div className="mb-4">
-          <div className="h-20 mb-4 flex justify-start items-center text-4xl font-semibold">
+          <div className="h-12 mb-4 flex justify-start items-center text-4xl font-semibold">
             {blog.title}
           </div>
           <div className="h-12 ">{blog.keywords}</div>
