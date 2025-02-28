@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Link } from "react-router";
 import { useAuth } from "../context/AuthProvider";
 import { ColorButton } from "../styling functions/button.style.function";
+import { Button } from "@/components/ui/button";
 
 export default function Login() {
   const [formData, setFormData] = useState({
@@ -66,9 +67,12 @@ export default function Login() {
         />
         <br />
         <br />
-        <ColorButton type="submit" className="w-full">
+        {/* <ColorButton type="submit" className="w-full">
           Login
-        </ColorButton>
+        </ColorButton> */}
+        <Button type="submit" className="w-full">
+          Login
+        </Button>
       </form>
 
       {/* Display response or error message */}
