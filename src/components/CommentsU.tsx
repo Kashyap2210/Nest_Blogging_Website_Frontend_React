@@ -1,9 +1,16 @@
 import { IUserEntity } from "blog-common-1.0";
+import { useContext, useState } from "react";
 import { deleteCommentByIdApiCallFunction } from "../api functions/comments/comments.api.calls.function";
-import { DeleteButton } from "../styling functions/button.style.function";
+import { AuthContext } from "../context/AuthContext";
+import {
+  DeleteButton,
+  LikeButton,
+} from "../styling functions/button.style.function";
+import CommentForm from "./CommentForm";
 
 export interface ICommentProp {
-  id: number;
+  commentId: number;
+  blogId?: number;
   text: string;
   authorId: number;
   currentUser: IUserEntity | null;
@@ -11,12 +18,17 @@ export interface ICommentProp {
 }
 
 export default function Comments({
-  id,
+  commentId,
+  blogId,
   text,
   authorId,
   currentUser,
   onDelete,
 }: ICommentProp) {
+  const [isReplyComment, setIsReplyComment] = useState<boolean>(false);
+
+  const { user } = useContext(AuthContext);
+
   const deleteComment = async (id: number) => {
     if (id === 0) {
       return;
@@ -29,16 +41,26 @@ export default function Comments({
   };
 
   return (
-    <div key={id} className="">
+    <div key={commentId} className="">
       <p className="my-2">{text}</p>
       <p className="my-2">
         <span className="italic">Comment written by:</span>{" "}
         <span className="font-bold">{authorId}</span>
       </p>
       {currentUser && currentUser.id === authorId && (
-        <DeleteButton onClick={() => deleteComment(id ? id : 0)}>
+        <DeleteButton onClick={() => deleteComment(commentId ? commentId : 0)}>
           Delete Comment
         </DeleteButton>
+      )}
+      <br />
+      <br />
+      {user && (
+        <LikeButton onClick={() => setIsReplyComment(true)}>Reply</LikeButton>
+      )}
+      <br />
+      <br />
+      {isReplyComment && (
+        <CommentForm blogId={blogId} commentId={commentId}></CommentForm>
       )}
     </div>
   );

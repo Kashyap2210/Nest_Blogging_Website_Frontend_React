@@ -1,14 +1,12 @@
 import {
   IBlogEntity,
   IBlogLikesCounterEntity,
-  ICommentCreateDto,
   ICommentEntity,
   LikeStatus,
 } from "blog-common-1.0";
 import React, { useContext, useState } from "react";
 import { Link } from "react-router";
 import { handleSubmitForBlogGetById } from "../api functions/blogs/blogs.api.calls.function";
-import { createCommentApiCallFunction } from "../api functions/comments/comments.api.calls.function";
 import {
   changeLikeStatusApiCallFunction,
   createDislikeEntityApiCallFunction,
@@ -20,6 +18,7 @@ import {
   DislikeButton,
   LikeButton,
 } from "../styling functions/button.style.function";
+import CommentForm from "./CommentForm";
 import Comments from "./CommentsU";
 
 export default function BlogById() {
@@ -35,10 +34,6 @@ export default function BlogById() {
   >([]);
 
   const [isCommentFormVisible, setIsCommentFormVisible] = useState(false);
-  const [newComment, setNewComment] = useState<ICommentCreateDto>({
-    text: "",
-    blogId: 0,
-  });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -119,29 +114,6 @@ export default function BlogById() {
     } catch (error) {}
   };
 
-  const createComment = async () => {
-    if (!blog?.id) {
-      console.error("Blog id is required");
-      return;
-    }
-
-    try {
-      const newCommentData = {
-        blogId: blog.id,
-        text: newComment?.text,
-      };
-
-      const createdComment = await createCommentApiCallFunction(newCommentData);
-      if (createdComment) {
-        setComments((previousComment) => [...previousComment, createdComment]);
-        setNewComment({ blogId: blog.id, text: "" });
-        setIsCommentFormVisible(false);
-      }
-    } catch (error) {
-      console.log("this is the error", error);
-    }
-  };
-
   return (
     <>
       <div className="p-4 min-h-screen">
@@ -189,7 +161,8 @@ export default function BlogById() {
           comment.map((mapping) => (
             <div className="mb-4" key={mapping.id}>
               <Comments
-                id={mapping.id}
+                commentId={mapping.id}
+                blogId={blog?.id}
                 text={mapping.text}
                 authorId={mapping.authorId}
                 currentUser={user}
@@ -199,18 +172,7 @@ export default function BlogById() {
           ))}
         <div className="flex gap-4 mb-8">
           {isCommentFormVisible && (
-            <div className="flex justify-start items-center gap-4">
-              <input
-                type="text"
-                name="comment"
-                value={newComment.text}
-                onChange={(e) =>
-                  setNewComment({ ...newComment, text: e.target.value })
-                }
-                className="border rounded-sm h-9 p-2"
-              />
-              <LikeButton onClick={createComment}>Create</LikeButton>
-            </div>
+            <CommentForm blogId={blog?.id}></CommentForm>
           )}
           <ColorButton
             onClick={() => setIsCommentFormVisible(!isCommentFormVisible)}
