@@ -44,7 +44,7 @@ export default function Login() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen text-left bg-zinc-950 text-white">
+    <div className="flex flex-col items-center justify-center min-h-screen text-left">
       <form onSubmit={handleSubmit} className="border p-8">
         <input
           type="text"
