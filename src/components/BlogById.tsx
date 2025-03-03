@@ -7,6 +7,7 @@ import {
 import React, { useContext, useState } from "react";
 import { Link } from "react-router";
 import { handleSubmitForBlogGetById } from "../api functions/blogs/blogs.api.calls.function";
+import { search } from "../api functions/comments/comments.api.calls.function";
 import {
   changeLikeStatusApiCallFunction,
   createDislikeEntityApiCallFunction,
@@ -20,6 +21,7 @@ import {
 } from "../styling functions/button.style.function";
 import CommentForm from "./CommentForm";
 import Comments from "./CommentsU";
+import { fetchComments } from "../helpers/fetch-comments.helper";
 
 export default function BlogById() {
   const { user } = useContext(AuthContext);
@@ -113,6 +115,10 @@ export default function BlogById() {
       } as React.FormEvent<HTMLFormElement>);
     } catch (error) {}
   };
+  if (blog) {
+    const newFetchComments = fetchComments(blog.id);
+    console.log("this are the new fetch commetns", newFetchComments);
+  }
 
   return (
     <>
@@ -173,7 +179,10 @@ export default function BlogById() {
           ))}
         <div className="flex gap-4 mb-8">
           {isCommentFormVisible && (
-            <CommentForm blogId={blog?.id}></CommentForm>
+            <CommentForm
+              blogId={blog?.id}
+              onNewCommentCreate={newFetchComments}
+            ></CommentForm>
           )}
           <ColorButton
             onClick={() => setIsCommentFormVisible(!isCommentFormVisible)}

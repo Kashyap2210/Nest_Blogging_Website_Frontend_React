@@ -5,11 +5,16 @@ import { AuthContext } from "../context/AuthContext";
 import { LikeButton } from "../styling functions/button.style.function";
 
 export interface ICommentFormProps {
+  onCommentCreate?: Function;
   blogId?: number;
   commentId?: number;
 }
 
-export default function CommentForm({ blogId, commentId }: ICommentFormProps) {
+export default function CommentForm({
+  blogId,
+  commentId,
+  onCommentCreate,
+}: ICommentFormProps) {
   const [newComment, setNewComment] = useState<ICommentCreateDto>({
     text: "",
     blogId: 0,
@@ -53,6 +58,12 @@ export default function CommentForm({ blogId, commentId }: ICommentFormProps) {
         setComments((previousComment) => [...previousComment, createdComment]);
         setNewComment({ blogId: blogId, text: "" });
         setIsCommentFormVisible(false);
+        if (typeof onCommentCreate === "function") {
+          console.log("Calling fetchComments inside createComment...");
+          await onCommentCreate(blogId);
+        } else {
+          console.error("onCommentCreate is not a function:", onCommentCreate);
+        }
       }
     } catch (error) {
       console.log("this is the error", error);
