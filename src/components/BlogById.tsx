@@ -166,6 +166,7 @@ export default function BlogById() {
                 text={mapping.text}
                 authorId={mapping.authorId}
                 currentUser={user}
+                replyCommentId={mapping.replyCommentId}
                 onDelete={removeCommentFromState}
               />
             </div>
