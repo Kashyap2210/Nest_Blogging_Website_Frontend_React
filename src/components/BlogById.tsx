@@ -4,7 +4,8 @@ import {
   ICommentEntity,
   LikeStatus,
 } from "blog-common-1.0";
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router";
 import { handleSubmitForBlogGetById } from "../api functions/blogs/blogs.api.calls.function";
 import { search } from "../api functions/comments/comments.api.calls.function";
@@ -14,6 +15,8 @@ import {
   createLikeEntityApiCallFunction,
 } from "../api functions/likes/dislikes.api.calls.functions";
 import { AuthContext } from "../context/AuthContext";
+import { removeComment, setCommentsRedux } from "../redux/commentSlice";
+import { RootState } from "../redux/store";
 import {
   ColorButton,
   DislikeButton,
@@ -21,7 +24,6 @@ import {
 } from "../styling functions/button.style.function";
 import CommentForm from "./CommentForm";
 import Comments from "./CommentsU";
-import { fetchComments } from "../helpers/fetch-comments.helper";
 
 export default function BlogById() {
   const { user } = useContext(AuthContext);
@@ -30,10 +32,12 @@ export default function BlogById() {
     blogId: 0,
   });
   const [blog, setBlog] = useState<IBlogEntity | null>(null);
-  const [comment, setComments] = useState<ICommentEntity[]>([]);
+  // const [comment, setComments] = useState<ICommentEntity[]>([]);
   const [likesAndDislikeEntities, setLikesAndDislikeEntities] = useState<
     IBlogLikesCounterEntity[]
   >([]);
+  const dispatch = useDispatch();
+  const comments = useSelector((state: RootState) => state.comments.comments);
 
   const [isCommentFormVisible, setIsCommentFormVisible] = useState(false);
 
@@ -56,15 +60,13 @@ export default function BlogById() {
 
     if (response) {
       setBlog(response.blog);
-      setComments(response.comments);
+      // setComments(response.comments);
       setLikesAndDislikeEntities(response.likes);
     }
   };
 
   const removeCommentFromState = (commentId: number) => {
-    setComments((prevComments) =>
-      prevComments.filter((comment) => comment.id !== commentId)
-    );
+    dispatch(removeComment(commentId));
   };
 
   const totalLikes = likesAndDislikeEntities?.filter(
@@ -115,10 +117,23 @@ export default function BlogById() {
       } as React.FormEvent<HTMLFormElement>);
     } catch (error) {}
   };
-  if (blog) {
-    const newFetchComments = fetchComments(blog.id);
-    console.log("this are the new fetch commetns", newFetchComments);
-  }
+
+  useEffect(() => {
+    const fetchComments = async () => {
+      if (blog) {
+        const fetchedComments: ICommentEntity[] | undefined = await search({
+          blogId: [blog.id],
+        });
+        if (Array.isArray(fetchedComments)) {
+          dispatch(setCommentsRedux(fetchedComments));
+        } else {
+          console.error("Fetched comments is not an array:", fetchedComments);
+        }
+      }
+    };
+
+    fetchComments();
+  }, [blog?.id, dispatch, comments.length]); // Re-fetch when comments change
 
   return (
     <>
@@ -163,8 +178,8 @@ export default function BlogById() {
         )}
 
         <h2 className="mb-2 text-3xl font-semibold">Comments</h2>
-        {comment &&
-          comment.map((mapping) => (
+        {comments &&
+          comments.map((mapping) => (
             <div className="mb-4" key={mapping.id}>
               <Comments
                 commentId={mapping.id}
@@ -181,7 +196,7 @@ export default function BlogById() {
           {isCommentFormVisible && (
             <CommentForm
               blogId={blog?.id}
-              onNewCommentCreate={newFetchComments}
+              // onNewCommentCreate={handleNewComment}
             ></CommentForm>
           )}
           <ColorButton

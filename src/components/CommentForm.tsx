@@ -1,11 +1,13 @@
-import { ICommentCreateDto, ICommentEntity } from "blog-common-1.0";
+import { ICommentCreateDto } from "blog-common-1.0";
 import { useContext, useState } from "react";
+import { useDispatch } from "react-redux";
 import { createCommentApiCallFunction } from "../api functions/comments/comments.api.calls.function";
 import { AuthContext } from "../context/AuthContext";
 import { LikeButton } from "../styling functions/button.style.function";
+import { addComment } from "../redux/commentSlice";
 
 export interface ICommentFormProps {
-  onCommentCreate?: Function;
+  // onNewCommentCreate: Function;
   blogId?: number;
   commentId?: number;
 }
@@ -13,18 +15,19 @@ export interface ICommentFormProps {
 export default function CommentForm({
   blogId,
   commentId,
-  onCommentCreate,
-}: ICommentFormProps) {
+}: // onNewCommentCreate,
+ICommentFormProps) {
   const [newComment, setNewComment] = useState<ICommentCreateDto>({
     text: "",
     blogId: 0,
     isReplyComment: false,
     replyCommentId: 0,
   });
-  const [_comment, setComments] = useState<ICommentEntity[]>([]);
+  // const [comment, setComments] = useState<ICommentEntity[]>([]);
   const [_isCommentFormVisible, setIsCommentFormVisible] = useState(false);
 
   const { user } = useContext(AuthContext);
+  const dispatch = useDispatch();
 
   const createComment = async () => {
     console.log("Inside the create comment function");
@@ -35,38 +38,26 @@ export default function CommentForm({
 
     try {
       console.log("this is the comment id", commentId);
-      let commentData: ICommentCreateDto = {
-        text: "",
-        blogId: 0,
+
+      const commentData: ICommentCreateDto = {
+        blogId: blogId,
+        text: newComment.text,
+        ...(commentId && { isReplyComment: true, replyCommentId: commentId }), // ✅ Only adds when commentId exists
       };
-      if (!commentId) {
-        commentData = {
-          blogId: blogId,
-          text: newComment?.text,
-        };
-      } else {
-        commentData = {
-          blogId: blogId,
-          text: newComment?.text,
-          isReplyComment: true,
-          replyCommentId: commentId,
-        };
-      }
 
       const createdComment = await createCommentApiCallFunction(commentData);
       if (createdComment) {
-        setComments((previousComment) => [...previousComment, createdComment]);
+        console.log("Comment created successfully:", createdComment);
+        dispatch(addComment(createdComment));
+
+        // Reset input field
         setNewComment({ blogId: blogId, text: "" });
         setIsCommentFormVisible(false);
-        if (typeof onCommentCreate === "function") {
-          console.log("Calling fetchComments inside createComment...");
-          await onCommentCreate(blogId);
-        } else {
-          console.error("onCommentCreate is not a function:", onCommentCreate);
-        }
+
+        // Call onNewCommentCreate to trigger a re-fetch in BlogById
       }
     } catch (error) {
-      console.log("this is the error", error);
+      console.error("Error creating comment:", error);
     }
   };
 
