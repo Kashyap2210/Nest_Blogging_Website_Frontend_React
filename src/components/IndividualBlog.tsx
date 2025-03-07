@@ -20,7 +20,7 @@ import {
   DislikeButton,
   LikeButton,
 } from "../styling functions/button.style.function";
-import Comments from "./CommentsU";
+import Comments from "./Comments";
 
 export default function IndividualBlog() {
   const [allComments, setAllComment] = useState<ICommentEntity[]>([]);
@@ -192,10 +192,11 @@ export default function IndividualBlog() {
         allComments.map((mapping) => (
           <div className="mb-4" key={mapping.id}>
             <Comments
-              id={mapping.id}
+              commentId={mapping.id}
               text={mapping.text}
               authorId={mapping.authorId}
               currentUser={user}
+              replyCommentId={mapping.replyCommentId}
               onDelete={removeCommentFromState}
             />
           </div>

@@ -35,6 +35,7 @@ export default function Comments({
     if (id === 0) {
       return;
     }
+    console.log("Delete function is called");
     const deletedComment = await deleteCommentByIdApiCallFunction(id);
 
     if (deletedComment) {

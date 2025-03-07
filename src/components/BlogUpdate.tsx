@@ -1,16 +1,20 @@
 import axios from "axios";
 import { IBlogEntity, IBlogUpdateDto } from "blog-common-1.0";
 import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router";
 import { updateBlogByIdApiCallFunction } from "../api functions/blogs/blogs.api.calls.function";
 import { getJwt } from "../helpers/helper";
+import { updateBlog } from "../redux/blogSlice";
+import { RootState } from "../redux/store";
 import { ColorButton } from "../styling functions/button.style.function";
 
 export default function BlogUpdate() {
   const [formData, setFormData] = useState<IBlogUpdateDto | null>(null);
-  const [updatedBlog, setUpdatedBlog] = useState<IBlogEntity | null>(null);
+  const [updatedBlog] = useSelector((state: RootState) => state.blogs.blogs);
   const [id, setId] = useState<number>();
 
+  const dispatch = useDispatch();
   React.useEffect(() => {
     getJwt();
   }, []);
@@ -51,7 +55,7 @@ export default function BlogUpdate() {
         cleanedFormData
       );
 
-      setUpdatedBlog(response);
+      dispatch(updateBlog(response));
     } catch (error) {
       if (axios.isAxiosError(error)) {
         console.error(error.response?.data);

@@ -1,22 +1,20 @@
 import { IBlogCreateDto } from "blog-common-1.0";
 import React, { useState } from "react";
+import { useDispatch } from "react-redux";
 import { Link } from "react-router";
 import { createBlogApiCallFunction } from "../api functions/blogs/blogs.api.calls.function";
-import { getJwt } from "../helpers/helper";
+import { setBlogs } from "../redux/blogSlice";
 import { ColorButton } from "../styling functions/button.style.function";
 
 export default function BlogCreate() {
+  const dispatch = useDispatch();
+
   const [formData, setFormData] = useState<IBlogCreateDto>({
     title: "",
     content: "",
     keywords: "",
   });
-  const [newBlog, setNewBlog] = useState<IBlogCreateDto | null>(null);
-
-  React.useEffect(() => {
-    //function to retrieve JWT and send it along with req
-    getJwt();
-  }, []);
+  const [newBlog, _setNewBlog] = useState<IBlogCreateDto | null>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -28,7 +26,9 @@ export default function BlogCreate() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     const newBlog = await createBlogApiCallFunction(e, formData);
-    if (newBlog) setNewBlog(newBlog);
+    if (newBlog) {
+      dispatch(setBlogs([newBlog]));
+    }
   };
 
   return (
