@@ -1,11 +1,11 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { ICommentEntity } from "blog-common-1.0";
 
-export interface CommentsState {
+export interface ICommentsState {
   comments: ICommentEntity[];
 }
 
-const initialState: CommentsState = {
+const initialState: ICommentsState = {
   comments: [],
 };
 
