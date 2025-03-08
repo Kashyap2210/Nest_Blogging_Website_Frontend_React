@@ -1,10 +1,11 @@
 import { IBlogCreateDto } from "blog-common-1.0";
 import React, { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router";
 import { createBlogApiCallFunction } from "../api functions/blogs/blogs.api.calls.function";
 import { setBlogs } from "../redux/blogSlice";
 import { ColorButton } from "../styling functions/button.style.function";
+import { RootState } from "../redux/store";
 
 export default function BlogCreate() {
   const dispatch = useDispatch();
@@ -14,8 +15,8 @@ export default function BlogCreate() {
     content: "",
     keywords: "",
   });
-  const [newBlog, _setNewBlog] = useState<IBlogCreateDto | null>(null);
-
+  // const [newBlog, _setNewBlog] = useState<IBlogCreateDto | null>(null);
+  const [createdBlog] = useSelector((state: RootState) => state.blogs.blogs);
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((previousData) => ({
@@ -74,9 +75,9 @@ export default function BlogCreate() {
           </Link>
         </ColorButton>
 
-        {newBlog && (
+        {createdBlog && (
           <div>
-            <h2>This is the title of Blog: {newBlog.title}</h2>
+            <h2>This is the title of Blog: {createdBlog.title}</h2>
           </div>
         )}
       </div>
