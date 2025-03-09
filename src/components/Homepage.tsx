@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router";
-import { ColorButton } from "../styling functions/button.style.function";
+import { Button } from "./ui/button";
 
 export default function HomePage() {
   const navigate = useNavigate();
@@ -33,25 +33,45 @@ export default function HomePage() {
       <div className="mb-4">
         <h1 className="text-4xl font-bold text-red-500">Homepage!</h1>
       </div>
-      <div className="">
-        <ColorButton onClick={handleLogin} variant="contained" color="success">
+      <div className="flex flex-col gap-4 mt-4">
+        <Button onClick={handleLogin} size={"lg"} className="w-full p-4 w-40">
           Login
-        </ColorButton>
-        <br />
-        <br />
-        <ColorButton onClick={handleCreateBlog}>Create Blog</ColorButton>
-        <br />
-        <br />
-        <ColorButton onClick={handleUpdateBlog}>Update Blog</ColorButton>
-        <br />
-        <br />
-        <ColorButton onClick={handleCreateUser}>Create User</ColorButton>
-        <br />
-        <br />
-        <ColorButton onClick={handleBlogById}>Get Blog By Id</ColorButton>
-        <br />
-        <br />
-        <ColorButton onClick={handleAllBlogs}>Get All Blogs</ColorButton>
+        </Button>
+        <Button
+          onClick={handleCreateBlog}
+          size={"lg"}
+          className="w-full p-4 w-40"
+        >
+          Create Blog
+        </Button>
+        <Button
+          onClick={handleUpdateBlog}
+          size={"lg"}
+          className="w-full p-4 w-40"
+        >
+          Update Blog
+        </Button>
+        <Button
+          onClick={handleCreateUser}
+          size={"lg"}
+          className="w-full p-4 w-40"
+        >
+          Create User
+        </Button>
+        <Button
+          onClick={handleBlogById}
+          size={"lg"}
+          className="w-full p-4 w-40"
+        >
+          Get Blog By Id
+        </Button>
+        <Button
+          onClick={handleAllBlogs}
+          size={"lg"}
+          className="w-full p-4 w-40"
+        >
+          Get All Blogs
+        </Button>
         <br />
         <br />
       </div>
