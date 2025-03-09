@@ -1,25 +1,30 @@
+import { Button } from "@/components/ui/button";
+import { useAuth } from "@/context/AuthProvider";
+import { Input } from "@heroui/react";
 import axios, { AxiosResponse } from "axios";
 import { IUserLoginResponse } from "blog-common-1.0";
 import { useState } from "react";
-import { Link } from "react-router";
-import { useAuth } from "../context/AuthProvider";
-import { ColorButton } from "../styling functions/button.style.function";
-import { Button } from "@/components/ui/button";
+import { Link, useNavigate } from "react-router";
 
 export default function Login() {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    username: "kash1997",
-    password: "kash1997",
+    username: "",
+    password: "",
   });
-  const [responseMessage, setResponseMessage] = useState(""); // State to store backend response message
-  const [errorMessage, setErrorMessage] = useState(""); // State to store error message
+  const [_responseMessage, setResponseMessage] = useState(""); // State to store backend response message
 
-  const { login, user, accessToken } = useAuth();
+  const { login } = useAuth();
+
+  const [errors, _setErrors] = useState({
+    username: false,
+    password: false,
+  });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData((previousData) => ({
-      ...previousData,
+    setFormData((prev) => ({
+      ...prev,
       [name]: value,
     }));
   };
@@ -36,66 +41,75 @@ export default function Login() {
       console.log("Backend Response: ", response.data);
       login(response.data);
       setResponseMessage("Login successful!"); // Display success message
-      setErrorMessage(""); // Clear error message
+      // setErrorMessage(""); // Clear error message
+      navigate("/api");
     } catch (error) {
       console.error("Error submitting the form: ", error);
       setResponseMessage(""); // Clear success message
-      setErrorMessage("Failed to login. Please try again."); // Set error message
+      // setErrorMessage("Failed to login. Please try again."); // Set error message
     }
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen text-left">
-      <form onSubmit={handleSubmit} className="border p-8">
-        <input
-          type="text"
-          name="username"
-          placeholder="username"
-          value={formData.username}
-          onChange={handleChange}
-          className="border px-4"
-        />
-        <br />
-        <br />
-        <input
-          type="password"
-          name="password"
-          placeholder="password"
-          value={formData.password}
-          onChange={handleChange}
-          className="border px-4"
-        />
-        <br />
-        <br />
-        {/* <ColorButton type="submit" className="w-full">
-          Login
-        </ColorButton> */}
-        <Button type="submit" className="w-full">
-          Login
-        </Button>
-      </form>
+    <div className="flex flex-col items-center justify-center min-h-screen gap-8 bg-gradient-to-tr from-dutchWine  to-wine">
+      {/* <div className="bg-white rounded-sm shadow-2xl shadow-gray-600/20"> */}
+      <div className="bg-white rounded-sm rounded-xl border border-gray-300 shadow-inner">
+        <form
+          noValidate
+          onSubmit={handleSubmit}
+          className="border p-8 rounded-lg shadow-lg "
+        >
+          {/* Username Input */}
+          <span className="text-sm">Username</span>
+          <Input
+            isRequired
+            // label="Username"
+            name="username"
+            placeholder="Enter username"
+            value={formData.username}
+            onChange={handleChange}
+            errorMessage={errors.username ? "Username is required." : ""}
+            className="border bg-white border-black focus:outline-none focus:ring-0 w-60 rounded-md mb-6"
+          />
+          {/* <br /> */}
+          {/* Password Input */}
+          <span className="text-sm">Password</span>
+          <Input
+            isRequired
+            type="password"
+            // label="Password"
+            name="password"
+            placeholder="Enter password"
+            value={formData.password}
+            onChange={handleChange}
+            errorMessage={errors.password ? "Password is required." : ""}
+            className="border bg-white border-black focus:ring-0 focus:border-black w-60 rounded-md mb-6"
+          />
+          {/* <br /> */}
+          {/* Submit Button */}
+          <Button
+            type="submit"
+            size={"lg"}
+            className="customButton w-full p-4 border-none"
+          >
+            Login
+          </Button>
+        </form>
 
-      {/* Display response or error message */}
-      {responseMessage && (
+        {/* Display response or error message */}
+        {/* {responseMessage && (
         <div style={{ color: "green" }}>{responseMessage}</div>
       )}
-      {errorMessage && <div style={{ color: "red" }}>{errorMessage}</div>}
+      {errorMessage && <div style={{ color: "red" }}>{errorMessage}</div>} */}
 
-      {/* Display user info if logged in */}
-      {user && (
-        <div className="mx-auto mt-8 max-w-2xl w-full p-4 border break-all whitespace-pre-wrap overflow-x-auto">
-          <h2>Welcome, {user.username}!</h2>
-          <p>Email: {user.emailId}</p>
-          <p>Access Token: {accessToken}</p>
-        </div>
-      )}
-      <br />
-      <br />
-      <ColorButton className="border">
+        {/* Display user info if logged in */}
+      </div>
+
+      <Button className="customButton w-60 p-4 border-none" size={"lg"}>
         <Link style={{ textDecoration: "none", color: "white" }} to="/api">
           Go To HomePage
         </Link>
-      </ColorButton>
+      </Button>
     </div>
   );
 }
