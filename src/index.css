@@ -1,6 +1,34 @@
 @import "tailwindcss";
 
+@theme {
+  --color-dutchWine: #efdfbb;
+  --color-wine: #722f37;
+  --color-midnight: #121063;
+  --color-tahiti: #3ab7bf;
+  --color-bermuda: #78dcca;
+}
+
 @plugin "tailwindcss-animate";
+@layer utilities {
+  input:-webkit-autofill {
+    background-color: white !important;
+    -webkit-box-shadow: 0 0 0 1000px white inset !important;
+    color: black !important;
+    border: none !important;
+  }
+}
+
+input:focus {
+  outline: none !important;
+  box-shadow: none !important;
+  /* border: 1px solid black !important; */
+}
+
+.customButton{
+  background-color: #722f37;
+  color: white;
+}
+
 
 @custom-variant dark (&:is(.dark *));
 
