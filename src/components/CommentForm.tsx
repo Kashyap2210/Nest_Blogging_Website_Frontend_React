@@ -53,8 +53,6 @@ ICommentFormProps) {
         // Reset input field
         setNewComment({ blogId: blogId, text: "" });
         setIsCommentFormVisible(false);
-
-        // Call onNewCommentCreate to trigger a re-fetch in BlogById
       }
     } catch (error) {
       console.error("Error creating comment:", error);
