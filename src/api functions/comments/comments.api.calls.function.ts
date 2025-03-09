@@ -1,5 +1,9 @@
 import axios, { AxiosResponse } from "axios";
-import { ICommentCreateDto, ICommentEntity } from "blog-common-1.0";
+import {
+  ICommentCreateDto,
+  ICommentEntity,
+  ICommentSearchDto,
+} from "blog-common-1.0";
 import { getJwt } from "../../helpers/helper";
 
 export const createCommentApiCallFunction = async (
@@ -12,6 +16,28 @@ export const createCommentApiCallFunction = async (
           Authorization: `Bearer ${getJwt()}`,
         },
       });
+
+    if (response) {
+      return response.data;
+    }
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.error(error.response?.data); // Log the backend error response
+    } else {
+      console.error("Unexpected error:", error);
+    }
+  }
+};
+
+export const search = async (formData: ICommentSearchDto) => {
+  try {
+    const response: AxiosResponse<ICommentEntity[] | undefined> =
+      await axios.post("http://localhost:3000/api/comments/search", formData, {
+        headers: {
+          Authorization: `Bearer ${getJwt()}`,
+        },
+      });
+    console.log("this is the comments for blog", response.data);
 
     if (response) {
       return response.data;
