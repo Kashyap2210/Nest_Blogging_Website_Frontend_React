@@ -54,7 +54,6 @@ export default function Login() {
         "http://localhost:3000/api/auth/login",
         formData
       );
-      console.log("Backend Response: ", response.data);
       login(response.data);
       setResponseMessage("Login successful!"); // Display success message
       // setErrorMessage(""); // Clear error message
@@ -66,10 +65,6 @@ export default function Login() {
       if (axios.isAxiosError(error) && error?.response) {
         if (error) {
           setErrorMessage(error?.response.data.message); // Set error message
-          console.log(
-            "this is the error message",
-            error?.response.data.message
-          );
           window.alert(error?.response.data.message); // ✅ Show JavaScript alert for error
         } else {
           setErrorMessage("Something went wrong. Please try again.");
