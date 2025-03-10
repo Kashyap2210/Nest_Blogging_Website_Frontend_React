@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/context/AuthProvider";
 import { Input } from "@heroui/react";
+import VisibilityIcon from "@mui/icons-material/Visibility";
 import axios, { AxiosResponse } from "axios";
 import { IUserLoginResponse } from "blog-common-1.0";
 import { useState } from "react";
@@ -12,6 +13,7 @@ export default function Login() {
     username: "",
     password: "",
   });
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [_responseMessage, setResponseMessage] = useState(""); // State to store backend response message
 
   const { login } = useAuth();
@@ -106,23 +108,29 @@ export default function Login() {
           {/* <br /> */}
           {/* Password Input */}
           <span className="text-sm">Password</span>
-          <Input
-            isRequired
-            type="password"
-            // label="Password"
-            name="password"
-            placeholder={
-              errors.username ? "Password is required" : "Enter password"
-            }
-            value={formData.password}
-            onChange={handleChange}
-            errorMessage={errors.password ? "Password is required." : ""}
-            className={`border ${
-              formData.password.trim().length === 0
-                ? "border-red-500"
-                : "border-black"
-            } bg-white focus:ring-0 w-60 rounded-md mb-6`}
-          />
+          <div className="relative w-60">
+            <Input
+              isRequired
+              type={isPasswordVisible ? "text" : "password"}
+              name="password"
+              placeholder={
+                errors.password ? "Password is required" : "Enter password"
+              }
+              value={formData.password}
+              onChange={handleChange}
+              errorMessage={errors.password ? "Password is required." : ""}
+              className={`border ${
+                formData.password.trim().length === 0
+                  ? "border-red-500"
+                  : "border-black"
+              } bg-white focus:ring-0 w-full rounded-md mb-6 pr-10`} // Add right padding for icon space
+            />
+            <VisibilityIcon
+              className="absolute top-1/2 right-3 transform -translate-y-1/2 cursor-pointer text-gray-500 hover:text-wine"
+              onClick={() => setIsPasswordVisible(!isPasswordVisible)}
+            />
+          </div>
+
           {/* <br /> */}
           {/* Submit Button */}
           <Button
