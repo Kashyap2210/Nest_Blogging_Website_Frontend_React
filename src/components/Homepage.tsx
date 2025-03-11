@@ -1,8 +1,10 @@
 import { useNavigate } from "react-router";
 import { Button } from "./ui/button";
+import { useAuth } from "@/context/AuthProvider";
 
 export default function HomePage() {
   const navigate = useNavigate();
+  const { logOut, user } = useAuth();
 
   const handleLogin = () => {
     navigate("/api/login");
@@ -26,6 +28,10 @@ export default function HomePage() {
 
   const handleAllBlogs = () => {
     navigate("/api/getAllBlogs");
+  };
+
+  const handleLogout = () => {
+    logOut();
   };
 
   return (
@@ -72,8 +78,16 @@ export default function HomePage() {
         >
           Get All Blogs
         </Button>
-        <br />
-        <br />
+        <Button onClick={handleLogout} size={"lg"} className="w-full p-4 w-40">
+          Logout
+        </Button>
+        {/* <br />
+        <br /> */}
+        {user ? (
+          <div>"User is logged In"</div>
+        ) : (
+          <div>"User is logged out"</div>
+        )}
       </div>
     </div>
   );
