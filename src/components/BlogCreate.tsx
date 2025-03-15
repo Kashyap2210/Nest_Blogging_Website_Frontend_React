@@ -1,11 +1,13 @@
+import { Input } from "@heroui/react";
 import { IBlogCreateDto } from "blog-common-1.0";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router";
 import { createBlogApiCallFunction } from "../api functions/blogs/blogs.api.calls.function";
 import { setBlogs } from "../redux/blogSlice";
-import { ColorButton } from "../styling functions/button.style.function";
 import { RootState } from "../redux/store";
+import { Button } from "./ui/button";
+import { Textarea } from "@heroui/input";
 
 export default function BlogCreate() {
   const dispatch = useDispatch();
@@ -17,7 +19,10 @@ export default function BlogCreate() {
   });
   // const [newBlog, _setNewBlog] = useState<IBlogCreateDto | null>(null);
   const [createdBlog] = useSelector((state: RootState) => state.blogs.blogs);
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    console.log;
     const { name, value } = e.target;
     setFormData((previousData) => ({
       ...previousData,
@@ -33,47 +38,67 @@ export default function BlogCreate() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen text-left ">
-      <h2 className="text-4xl font-bold text-red-500 mb-4">Create New Blog</h2>
+    // <div className="flex flex-col items-center justify-center min-h-screen text-left ">
+    <div className="p-4 min-h-screen text-left ">
+      {/* <h2 className="text-4xl font-bold text-red-500 mb-4">Create New Blog</h2> */}
       <div className="">
         <form
           onSubmit={handleSubmit}
-          className="border p-8 mb-8 flex flex-col gap-8 items-center justify-center"
+          className=" px-4 pt-4 mb-8 flex flex-col gap-6 items-start justify-center"
         >
-          <input
+          {/* <input
             type="title"
             placeholder="Enter title of blog"
             name="title"
             value={formData.title}
             onChange={handleChange}
             className="border px-4"
-          ></input>
-          <input
+          ></input> */}
+          <Input
+            type="title"
+            placeholder="Enter title of blog"
+            name="title"
+            value={formData.title}
+            onChange={handleChange}
+            className="border border-wine rounded-md h-12"
+          ></Input>
+          <Textarea
+            // isMultiline
             type="text"
-            placeholder="content"
             name="content"
+            description="content"
+            minRows={2}
+            maxRows={300}
+            placeholder="What on ya mind?"
             value={formData.content}
             onChange={handleChange}
-            className="border px-4"
-          ></input>
-          <input
+            className="border border-wine rounded-md p-4 h-80 overflow-y-auto"
+          ></Textarea>
+          {/* <input
             type="text"
             placeholder="keywords"
             name="keywords"
             value={formData.keywords}
             onChange={handleChange}
             className="border px-4"
-          ></input>
-          <ColorButton type="submit" className="w-full">
+          ></input> */}
+          <Input
+            type="text"
+            placeholder="Help people find your blog more easily by KEYWORDS?"
+            name="keywords"
+            value={formData.keywords}
+            onChange={handleChange}
+            className="border border-wine rounded-md h-12"
+          ></Input>
+          <Button type="submit" className="customButton w-40">
             Create Blog
-          </ColorButton>
+          </Button>
+          <Button className="customButton w-40 block text-center">
+            <Link to="/api" className="">
+              Go To HomePage
+            </Link>
+          </Button>
         </form>
-
-        <ColorButton className="w-full block text-center">
-          <Link to="/api" className="">
-            Go To HomePage
-          </Link>
-        </ColorButton>
 
         {createdBlog && (
           <div>
