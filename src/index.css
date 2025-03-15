@@ -24,6 +24,14 @@ input:focus {
   /* border: 1px solid black !important; */
 }
 
+textarea:focus {
+  outline: none !important;
+  box-shadow: none !important;
+  /* border: 1px solid black !important; */
+}
+
+
+
 .customButton{
   background-color: #722f37;
   color: white;
