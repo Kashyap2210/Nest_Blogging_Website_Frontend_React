@@ -83,8 +83,6 @@ export default function HomePage() {
         <Button onClick={handleLogout} size={"lg"} className="w-full p-4 w-40">
           Logout
         </Button>
-        {/* <br />
-        <br /> */}
         {user ? (
           <div>"User is logged In"</div>
         ) : (
