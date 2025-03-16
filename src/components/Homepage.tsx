@@ -57,13 +57,15 @@ export default function HomePage() {
         >
           Update Blog
         </Button>
-        <Button
-          onClick={handleCreateUser}
-          size={"lg"}
-          className="w-full p-4 w-40"
-        >
-          Create User
-        </Button>
+        {user && user.role === "TOAA" && (
+          <Button
+            onClick={handleCreateUser}
+            size={"lg"}
+            className="w-full p-4 w-40"
+          >
+            Create User
+          </Button>
+        )}
         <Button
           onClick={handleBlogById}
           size={"lg"}
