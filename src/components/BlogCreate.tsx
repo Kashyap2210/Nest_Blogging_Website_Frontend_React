@@ -1,4 +1,5 @@
 import { Input } from "@heroui/react";
+import { TextField } from "@mui/material";
 import { IBlogCreateDto } from "blog-common-1.0";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -7,7 +8,6 @@ import { createBlogApiCallFunction } from "../api functions/blogs/blogs.api.call
 import { setBlogs } from "../redux/blogSlice";
 import { RootState } from "../redux/store";
 import { Button } from "./ui/button";
-import { Textarea } from "@heroui/input";
 
 export default function BlogCreate() {
   const dispatch = useDispatch();
@@ -17,7 +17,6 @@ export default function BlogCreate() {
     content: "",
     keywords: "",
   });
-  // const [newBlog, _setNewBlog] = useState<IBlogCreateDto | null>(null);
   const [createdBlog] = useSelector((state: RootState) => state.blogs.blogs);
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -38,22 +37,12 @@ export default function BlogCreate() {
   };
 
   return (
-    // <div className="flex flex-col items-center justify-center min-h-screen text-left ">
     <div className="p-4 min-h-screen text-left ">
-      {/* <h2 className="text-4xl font-bold text-red-500 mb-4">Create New Blog</h2> */}
       <div className="">
         <form
           onSubmit={handleSubmit}
           className=" px-4 pt-4 mb-8 flex flex-col gap-6 items-start justify-center"
         >
-          {/* <input
-            type="title"
-            placeholder="Enter title of blog"
-            name="title"
-            value={formData.title}
-            onChange={handleChange}
-            className="border px-4"
-          ></input> */}
           <Input
             type="title"
             placeholder="Enter title of blog"
@@ -62,26 +51,39 @@ export default function BlogCreate() {
             onChange={handleChange}
             className="border border-wine rounded-md h-12"
           ></Input>
-          <Textarea
-            // isMultiline
-            type="text"
+          <TextField
+            id="filled-multiline-static"
+            multiline
             name="content"
-            description="content"
-            minRows={2}
-            maxRows={300}
-            placeholder="What on ya mind?"
+            rows={20}
+            placeholder="What's on ya mind?"
+            variant="filled"
             value={formData.content}
             onChange={handleChange}
-            className="border border-wine rounded-md p-4 h-80 overflow-y-auto"
-          ></Textarea>
-          {/* <input
-            type="text"
-            placeholder="keywords"
-            name="keywords"
-            value={formData.keywords}
-            onChange={handleChange}
-            className="border px-4"
-          ></input> */}
+            fullWidth
+            sx={{
+              backgroundColor: "white", // Ensures white background
+              "& .MuiFilledInput-root": {
+                backgroundColor: "white", // Overrides default grey
+                border: "1px solid #722f37", // Custom border
+                borderRadius: "0.375rem", // Makes it look cleaner
+                boxShadow: "none", // Removes any unwanted shadow
+                padding: "1rem",
+              },
+              "& .Mui-focused": {
+                backgroundColor: "white !important",
+                border: "2px solid #722f37",
+              },
+              "& .MuiInputBase-root:hover": {
+                backgroundColor: "white",
+              },
+              "& .MuiFilledInput-underline:before, & .MuiFilledInput-underline:after":
+                {
+                  borderBottom: "none !important", // Removes the bottom border
+                },
+            }}
+          />
+
           <Input
             type="text"
             placeholder="Help people find your blog more easily by KEYWORDS?"
