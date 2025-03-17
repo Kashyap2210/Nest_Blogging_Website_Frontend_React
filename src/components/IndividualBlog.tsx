@@ -139,7 +139,7 @@ export default function IndividualBlog() {
             {blog.title}
           </div>
           <div className="h-12 ">{blog.keywords}</div>
-          <div className="text-justify">{blog.content}</div>
+          <div className="text-justify whitespace-pre-wrap">{blog.content}</div>
           <div className="h-8 flex justify-start items-center text-2xl mt-4">
             <span className="">Written By, </span>
             <span className="italic font-semibold">&nbsp;{blog.author}</span>
