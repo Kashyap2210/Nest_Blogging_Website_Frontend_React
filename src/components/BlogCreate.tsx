@@ -123,7 +123,9 @@ export default function BlogCreate() {
               backgroundColor: "white", // Ensures white background
               "& .MuiFilledInput-root": {
                 backgroundColor: "white", // Overrides default grey
-                border: errors.content ? "1px solid red" : "1px solid #722f37", // Red border on error
+                border: errors.content
+                  ? "2px solid #B91C1C"
+                  : "1px solid #722f37", // Red border on error
                 borderRadius: "0.375rem", // Makes it look cleaner
                 boxShadow: "none", // Removes any unwanted shadow
                 padding: "1rem",
