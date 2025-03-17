@@ -17,6 +17,11 @@ export default function BlogCreate() {
     content: "",
     keywords: "",
   });
+  const [errors, setErrors] = useState({
+    title: false,
+    content: false,
+  });
+
   const [createdBlog] = useSelector((state: RootState) => state.blogs.blogs);
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -30,6 +35,17 @@ export default function BlogCreate() {
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const titleIsEmpty = formData.title.trim().length === 0;
+    const contentIsEmpty = formData.content.trim().length === 0;
+
+    if (titleIsEmpty || contentIsEmpty) {
+      setErrors({
+        title: titleIsEmpty,
+        content: contentIsEmpty,
+      });
+      return;
+    }
     const newBlog = await createBlogApiCallFunction(e, formData);
     if (newBlog) {
       dispatch(setBlogs([newBlog]));
@@ -45,13 +61,21 @@ export default function BlogCreate() {
         >
           <Input
             type="title"
-            placeholder="Enter title of blog"
+            placeholder={
+              errors.title
+                ? "Title is required for blog"
+                : "Enter title of blog"
+            }
             name="title"
             value={formData.title}
             onChange={handleChange}
-            className="border border-wine rounded-md h-12"
+            className={
+              errors.title
+                ? "border border-red-700 border-2 rounded-md h-12"
+                : "border border-wine rounded-md h-12"
+            }
           ></Input>
-          <TextField
+          {/* <TextField
             id="filled-multiline-static"
             multiline
             name="content"
@@ -73,6 +97,40 @@ export default function BlogCreate() {
               "& .Mui-focused": {
                 backgroundColor: "white !important",
                 border: "2px solid #722f37",
+              },
+              "& .MuiInputBase-root:hover": {
+                backgroundColor: "white",
+              },
+              "& .MuiFilledInput-underline:before, & .MuiFilledInput-underline:after":
+                {
+                  borderBottom: "none !important", // Removes the bottom border
+                },
+            }}
+          /> */}
+          <TextField
+            id="filled-multiline-static"
+            multiline
+            name="content"
+            rows={20}
+            placeholder={
+              errors.content ? "Content is required" : "What's on ya mind?"
+            }
+            variant="filled"
+            value={formData.content}
+            onChange={handleChange}
+            fullWidth
+            sx={{
+              backgroundColor: "white", // Ensures white background
+              "& .MuiFilledInput-root": {
+                backgroundColor: "white", // Overrides default grey
+                border: errors.content ? "1px solid red" : "1px solid #722f37", // Red border on error
+                borderRadius: "0.375rem", // Makes it look cleaner
+                boxShadow: "none", // Removes any unwanted shadow
+                padding: "1rem",
+              },
+              "& .Mui-focused": {
+                backgroundColor: "white !important",
+                border: errors.content ? "2px solid red" : "2px solid #722f37",
               },
               "& .MuiInputBase-root:hover": {
                 backgroundColor: "white",
