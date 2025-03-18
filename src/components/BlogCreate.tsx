@@ -32,6 +32,11 @@ export default function BlogCreate() {
       ...previousData,
       [name]: value,
     }));
+
+    setErrors((previousErrors) => ({
+      ...previousErrors,
+      [name]: value.trim().length === 0,
+    }));
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -132,7 +137,7 @@ export default function BlogCreate() {
               },
               "& .Mui-focused": {
                 backgroundColor: "white !important",
-                border: errors.content ? "2px solid red" : "2px solid #722f37",
+                border: errors.content ? "2px solid red" : "1px solid #722f37",
               },
               "& .MuiInputBase-root:hover": {
                 backgroundColor: "white",
