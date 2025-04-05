@@ -25,6 +25,8 @@ const blogsSlice = createSlice({
       );
       if (index !== -1) {
         state.blogs[index] = action.payload;
+      } else {
+        state.blogs.push(action.payload);
       }
     },
   },
