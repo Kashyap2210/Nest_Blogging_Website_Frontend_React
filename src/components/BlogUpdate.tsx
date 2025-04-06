@@ -4,7 +4,7 @@ import axios from "axios";
 import { IBlogEntity, IBlogResponse, IBlogUpdateDto } from "blog-common-1.0";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import {
   getBlogByIdApiCallFunction,
   updateBlogByIdApiCallFunction,
@@ -32,6 +32,8 @@ export default function BlogUpdate() {
   React.useEffect(() => {
     getJwt();
   }, []);
+
+  const navigate = useNavigate();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -77,6 +79,10 @@ export default function BlogUpdate() {
 
       dispatch(updateBlog(response));
       if (responseU) dispatch(setBlogForIndividualBlog([responseU]));
+
+      navigate("/api/readIndividualBlog", {
+        state: { blog: responseU?.blog, likes: responseU?.likes },
+      });
     } catch (error) {
       if (axios.isAxiosError(error)) {
         console.error(error.response?.data);

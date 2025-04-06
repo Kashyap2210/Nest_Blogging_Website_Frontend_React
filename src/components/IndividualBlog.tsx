@@ -37,6 +37,10 @@ export default function IndividualBlog() {
 
   const { blog, likes }: IBlogListProps = location.state || {};
 
+  console.log("this is th e location.state", location.state);
+
+  console.log("this is the blogs and likes from individual blog", blog);
+
   const commentsRelevantToBlog = allComments.filter(
     (comment) => comment.blogId === blog.id
   );
