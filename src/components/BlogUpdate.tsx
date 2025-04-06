@@ -81,7 +81,11 @@ export default function BlogUpdate() {
       if (responseU) dispatch(setBlogForIndividualBlog([responseU]));
 
       navigate("/api/readIndividualBlog", {
-        state: { blog: responseU?.blog, likes: responseU?.likes },
+        state: {
+          blog: responseU?.blog,
+          likes: responseU?.likes,
+          comments: responseU?.comments,
+        },
       });
     } catch (error) {
       if (axios.isAxiosError(error)) {
