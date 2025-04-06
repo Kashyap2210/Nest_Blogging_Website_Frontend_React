@@ -30,7 +30,7 @@ export default function IndividualBlog() {
   const allComments = useSelector(
     (state: RootState) => state.comments.comments
   );
-  console.log("this are all comments from redux", allComments);
+  // console.log("this are all comments from redux", allComments);
 
   const likesAndDislikeEntities = useSelector(
     (state: RootState) => state.likesAndDislikes.likesAndDislikeEntities
@@ -46,9 +46,9 @@ export default function IndividualBlog() {
     ? passedComments
     : allComments.filter((comment) => comment.blogId === blog.id);
 
-  console.log("this is th e location.state", location.state);
+  // console.log("this is th e location.state", location.state);
 
-  console.log("this is the blogs and likes from individual blog", blog);
+  // console.log("this is the blogs and likes from individual blog", blog);
 
   const [isCommentFormVisible, setIsCommentFormVisible] = useState(false);
   const [newComment, setNewComment] = useState<ICommentCreateDto>({

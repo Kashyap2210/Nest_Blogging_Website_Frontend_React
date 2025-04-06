@@ -23,7 +23,7 @@ export default function BlogUpdate() {
       ? state.blogs.blogs.find((blog) => blog.id === id)
       : undefined
   );
-  console.log("this is the updatedBlog", updatedBlog);
+  // console.log("this is the updatedBlog", updatedBlog);
   const [errors, setErrors] = useState({
     id: false,
   });
@@ -75,7 +75,7 @@ export default function BlogUpdate() {
 
       const responseU: IBlogResponse | undefined =
         await getBlogByIdApiCallFunction(e, id);
-      console.log("this is the updated blog in IBLogResponse form", responseU);
+      // console.log("this is the updated blog in IBLogResponse form", responseU);
 
       dispatch(updateBlog(response));
       if (responseU) dispatch(setBlogForIndividualBlog([responseU]));
