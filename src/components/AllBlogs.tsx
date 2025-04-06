@@ -1,35 +1,58 @@
-import axios, { AxiosResponse } from "axios";
+import axios from "axios";
 import { IBlogResponse } from "blog-common-1.0";
-import { useState } from "react";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router";
-import { getJwt } from "../helpers/helper";
+import { getAllBlogsApiCallFunction } from "../api functions/blogs/blogs.api.calls.function";
+import { setBlogs } from "../redux/blogSlice";
+import { setCommentsRedux } from "../redux/commentSlice";
+import { setLikesAndDislikeEntities } from "../redux/likesAndDislikesSlice";
+import { RootState } from "../redux/store";
+import { setUsers } from "../redux/userSlice";
+import {
+  ColorButton,
+  GetAllButton,
+} from "../styling functions/button.style.function";
 import BlogList from "./BlogList";
 
 export default function AllBlogs() {
-  const [blogArray, setBlogArray] = useState<IBlogResponse[]>([]);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(setBlogs([]));
+    dispatch(setCommentsRedux([]));
+    dispatch(setLikesAndDislikeEntities([]));
+  }, [dispatch]);
+
+  const blogArray = useSelector((state: RootState) => state.blogs.blogs);
+  const commentsArray = useSelector(
+    (state: RootState) => state.comments.comments
+  );
+  const likesAndDislikeEntities = useSelector(
+    (state: RootState) => state.likesAndDislikes.likesAndDislikeEntities
+  );
+
+  const users = useSelector((state: RootState) => state.users.users);
+
   const getAllBlogs = async () => {
     try {
-      const allBlogs: AxiosResponse<IBlogResponse[]> = await axios.get(
-        `http://localhost:3000/api/blog/`,
-        {
-          headers: {
-            Authorization: `Bearer ${getJwt()}`,
-          },
-        }
-      );
-
-      // console.log("this is a ", allBlogs.data[0].blog);
-
-      // console.log("this are all the blogs", allBlogs);
+      const allBlogs: IBlogResponse[] | undefined =
+        await getAllBlogsApiCallFunction();
 
       let blogs: IBlogResponse[] = [];
-      allBlogs.data.map((blog) => blogs.push(blog));
+      if (allBlogs) {
+        allBlogs.map((blog) => blogs.push(blog));
+        dispatch(setBlogs(blogs.map((blog) => blog.blog)));
 
-      // console.log("this is the blogs array", blogs);
+        const comments = blogs.map((blog) => blog.comments).flat();
+        dispatch(setCommentsRedux(comments));
 
-      setBlogArray(blogs);
+        const likesAndDislikeEntities = blogs.map((blog) => blog.likes).flat();
+        dispatch(setLikesAndDislikeEntities(likesAndDislikeEntities));
+      }
 
-      // console.log("this are the all blogs", blogArray);
+      const userEntities = blogs.map((blog) => blog.users).flat();
+      dispatch(setUsers(userEntities));
     } catch (error) {
       if (axios.isAxiosError(error)) {
         console.log("this is the error", error.response?.data);
@@ -38,17 +61,32 @@ export default function AllBlogs() {
   };
 
   return (
-    <div>
-      <button onClick={getAllBlogs}>Get All Blogs</button>
-      <br /><br />
-      <button>
-        <Link to="/api">Go To HomePage</Link>
-      </button>
-      <ul>
-        {blogArray.map((blog) => (
-          <BlogList key={blog.blog.id} blog={blog.blog} likes={blog.likes} />
-        ))}
-      </ul>
+    <div className="p-4 flex flex-col gap-4">
+      <div className="flex gap-4">
+        <GetAllButton onClick={getAllBlogs}>Get All Blogs</GetAllButton>
+        <ColorButton>
+          <Link style={{ textDecoration: "none", color: "white" }} to="/api">
+            Go To HomePage
+          </Link>
+        </ColorButton>
+      </div>
+      <div>
+        <ul>
+          {blogArray.map((blog) => (
+            <BlogList
+              key={blog.id}
+              blog={blog}
+              likes={likesAndDislikeEntities.filter(
+                (entity) => entity.blogId === blog.id
+              )}
+              comments={commentsArray.filter(
+                (comment) => comment.blogId === blog.id
+              )}
+              users={users}
+            />
+          ))}
+        </ul>
+      </div>
     </div>
   );
 }

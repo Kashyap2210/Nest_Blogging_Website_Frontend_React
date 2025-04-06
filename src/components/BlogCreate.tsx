@@ -1,114 +1,178 @@
-import axios, { AxiosResponse } from 'axios';
-import { IBlogCreateDto, IBlogEntity } from 'blog-common-1.0';
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router';
-import { getJwt } from '../helpers/helper';
+import { Input } from "@heroui/react";
+import { TextField } from "@mui/material";
+import { IBlogCreateDto } from "blog-common-1.0";
+import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Link } from "react-router";
+import { createBlogApiCallFunction } from "../api functions/blogs/blogs.api.calls.function";
+import { setBlogs } from "../redux/blogSlice";
+import { RootState } from "../redux/store";
+import { Button } from "./ui/button";
 
 export default function BlogCreate() {
+  const dispatch = useDispatch();
+
   const [formData, setFormData] = useState<IBlogCreateDto>({
-    title: '',
-    content: '',
-    keywords: '',
+    title: "",
+    content: "",
+    keywords: "",
   });
-  const [newBlog, setNewBlog] = useState<IBlogCreateDto | null>(null);
+  const [errors, setErrors] = useState({
+    title: false,
+    content: false,
+  });
 
-  React.useEffect(() => {
-    //function to retrieve JWT and send it along with req
-    getJwt();
-  }, []);
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const [createdBlog] = useSelector((state: RootState) => state.blogs.blogs);
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    console.log;
     const { name, value } = e.target;
     setFormData((previousData) => ({
       ...previousData,
       [name]: value,
     }));
+
+    setErrors((previousErrors) => ({
+      ...previousErrors,
+      [name]: value.trim().length === 0,
+    }));
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log('this is the blog data', formData);
+    const titleIsEmpty = formData.title.trim().length === 0;
+    const contentIsEmpty = formData.content.trim().length === 0;
 
-    const token: string | null = getJwt();
-
-    try {
-      const response: AxiosResponse<IBlogEntity> = await axios.post(
-        'http://localhost:3000/api/blog',
-        formData, {
-        headers: {
-          Authorization: `Bearer ${token}`, // Add token to header
-        }
-      }
-      );
-      console.log('this is the response', response);
-      const { data } = response;
-      console.log('this is the new blog', data);
-      setNewBlog(data);
-    } catch (error) {
-      if (axios.isAxiosError(error)) {
-        // console.log("this is the response", response)
-        console.error(error.response?.data); // Log the backend error response
-      } else {
-        console.error('Unexpected error:', error);
-      }
+    if (titleIsEmpty || contentIsEmpty) {
+      setErrors({
+        title: titleIsEmpty,
+        content: contentIsEmpty,
+      });
+      return;
+    }
+    const newBlog = await createBlogApiCallFunction(e, formData);
+    if (newBlog) {
+      dispatch(setBlogs([newBlog]));
     }
   };
 
-  const routeToUpdateBlog = () => {
-    console.log("click event for routing to update blog page")
-    const navigate = useNavigate()
-    navigate("/api/updateBlog")
-
-  }
-
   return (
-    <>
-      <div>this is the container to create blogs</div>
-      <form onSubmit={handleSubmit}>
-        <input
-          type="title"
-          placeholder="Enter title of blog"
-          name="title"
-          value={formData.title}
-          onChange={handleChange}
-        ></input>
-        <br />
-        <br />
-        <br />
-        <input
-          type="text"
-          placeholder="content"
-          name="content"
-          value={formData.content}
-          onChange={handleChange}
-        ></input>
-        <br />
-        <br />
-        <br />
-        <input
-          type="text"
-          placeholder="keywords"
-          name="keywords"
-          value={formData.keywords}
-          onChange={handleChange}
-        ></input>
-        <br />
-        <br />
-        <br />
-        <button type="submit">Create Blog</button>
-      </form>
+    <div className="p-4 min-h-screen text-left ">
+      <div className="">
+        <form
+          onSubmit={handleSubmit}
+          className=" px-4 pt-4 mb-8 flex flex-col gap-6 items-start justify-center"
+        >
+          <Input
+            type="title"
+            placeholder={
+              errors.title
+                ? "Title is required for blog"
+                : "Enter title of blog"
+            }
+            name="title"
+            value={formData.title}
+            onChange={handleChange}
+            className={
+              errors.title
+                ? "border border-red-700 border-2 rounded-md h-12"
+                : "border border-wine rounded-md h-12"
+            }
+          ></Input>
+          {/* <TextField
+            id="filled-multiline-static"
+            multiline
+            name="content"
+            rows={20}
+            placeholder="What's on ya mind?"
+            variant="filled"
+            value={formData.content}
+            onChange={handleChange}
+            fullWidth
+            sx={{
+              backgroundColor: "white", // Ensures white background
+              "& .MuiFilledInput-root": {
+                backgroundColor: "white", // Overrides default grey
+                border: "1px solid #722f37", // Custom border
+                borderRadius: "0.375rem", // Makes it look cleaner
+                boxShadow: "none", // Removes any unwanted shadow
+                padding: "1rem",
+              },
+              "& .Mui-focused": {
+                backgroundColor: "white !important",
+                border: "2px solid #722f37",
+              },
+              "& .MuiInputBase-root:hover": {
+                backgroundColor: "white",
+              },
+              "& .MuiFilledInput-underline:before, & .MuiFilledInput-underline:after":
+                {
+                  borderBottom: "none !important", // Removes the bottom border
+                },
+            }}
+          /> */}
+          <TextField
+            id="filled-multiline-static"
+            multiline
+            name="content"
+            rows={20}
+            placeholder={
+              errors.content ? "Content is required" : "What's on ya mind?"
+            }
+            variant="filled"
+            value={formData.content}
+            onChange={handleChange}
+            fullWidth
+            sx={{
+              backgroundColor: "white", // Ensures white background
+              "& .MuiFilledInput-root": {
+                backgroundColor: "white", // Overrides default grey
+                border: errors.content
+                  ? "2px solid #B91C1C"
+                  : "1px solid #722f37", // Red border on error
+                borderRadius: "0.375rem", // Makes it look cleaner
+                boxShadow: "none", // Removes any unwanted shadow
+                padding: "1rem",
+              },
+              "& .Mui-focused": {
+                backgroundColor: "white !important",
+                border: errors.content ? "2px solid red" : "1px solid #722f37",
+              },
+              "& .MuiInputBase-root:hover": {
+                backgroundColor: "white",
+              },
+              "& .MuiFilledInput-underline:before, & .MuiFilledInput-underline:after":
+                {
+                  borderBottom: "none !important", // Removes the bottom border
+                },
+            }}
+          />
 
-      <button onClick={routeToUpdateBlog}>
-        {/* <Link to={"/api/updateBlog"}> */}
-          Update Blog
-        {/* </Link> */}
-      </button>
+          <Input
+            type="text"
+            placeholder="Help people find your blog more easily by KEYWORDS?"
+            name="keywords"
+            value={formData.keywords}
+            onChange={handleChange}
+            className="border border-wine rounded-md h-12"
+          ></Input>
+          <Button type="submit" className="customButton w-40">
+            Create Blog
+          </Button>
+          <Button className="customButton w-40 block text-center">
+            <Link to="/api" className="">
+              Go To HomePage
+            </Link>
+          </Button>
+        </form>
 
-      {newBlog && (
-        <div>
-          <h2>This is the title of Blog: {newBlog.title}</h2>
-        </div>
-      )}
-    </>
+        {createdBlog && (
+          <div>
+            <h2>This is the title of Blog: {createdBlog.title}</h2>
+          </div>
+        )}
+      </div>
+    </div>
   );
 }
