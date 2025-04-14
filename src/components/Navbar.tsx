@@ -1,11 +1,23 @@
-import SearchIcon from "@mui/icons-material/Search";
-import React, { useState } from "react";
-import { Input } from "./ui/input";
-import axios from "axios";
 import { getJwt } from "@/helpers/helper";
+import { searchedBlog } from "@/redux/blogSlice";
+import { RootState } from "@/redux/store";
+import SearchIcon from "@mui/icons-material/Search";
+import axios, { AxiosResponse } from "axios";
+import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useLocation } from "react-router";
+import { Input } from "./ui/input";
+import { IBlogResponse } from "blog-common-1.0";
+import { searchBlogByFilterApiCallFunction } from "@/api functions/blogs/blogs.api.calls.function";
 
 export default function Navbar() {
+  const location = useLocation();
+  const dispatch = useDispatch();
   const [query, setQuery] = useState("");
+  const searchedBlogFromApi = useSelector(
+    (state: RootState) => state.blogs.blogs
+  );
+  console.log("this is the searched blog from api", searchedBlogFromApi);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
@@ -16,19 +28,13 @@ export default function Navbar() {
   };
 
   const handleSearch = async () => {
-    const response = await axios.post(
-      "http://localhost:3000/api/blog/search",
-      {
-        title: [query],
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${getJwt()}`, // Add token to header
-        },
-      }
-    );
+    const response = await searchBlogByFilterApiCallFunction({
+      title: [query],
+    });
     console.log("A search event happened");
     console.log("this is the search response", response);
+
+    // add dispatches for users, likesAndDislikes, comments
   };
 
   const handleSearchClick = () => {
@@ -50,7 +56,7 @@ export default function Navbar() {
             className="w-60 border-none focus-visible:ring-0 text-white focus-visible:ring-offset-0 shadow-none"
             onChange={handleChange}
             value={query}
-            // onKeyDown={handleChange}
+            // onKeyDown={handleSubmit}
           />
           <SearchIcon
             className="cursor-pointer text-white"
