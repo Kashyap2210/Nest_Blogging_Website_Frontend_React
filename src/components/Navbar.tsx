@@ -1,14 +1,11 @@
-import { getJwt } from "@/helpers/helper";
-import { searchedBlog } from "@/redux/blogSlice";
+import { searchBlogByFilterApiCallFunction } from "@/api functions/blogs/blogs.api.calls.function";
 import { RootState } from "@/redux/store";
 import SearchIcon from "@mui/icons-material/Search";
-import axios, { AxiosResponse } from "axios";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router";
 import { Input } from "./ui/input";
-import { IBlogResponse } from "blog-common-1.0";
-import { searchBlogByFilterApiCallFunction } from "@/api functions/blogs/blogs.api.calls.function";
+import { searchedBlog } from "@/redux/blogSlice";
 
 export default function Navbar() {
   const location = useLocation();
@@ -33,7 +30,7 @@ export default function Navbar() {
     });
     console.log("A search event happened");
     console.log("this is the search response", response);
-
+    if (response) dispatch(searchedBlog(response.map((res) => res.blog)));
     // add dispatches for users, likesAndDislikes, comments
   };
 

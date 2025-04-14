@@ -27,15 +27,8 @@ const blogsSlice = createSlice({
         state.blogs[index] = action.payload;
       }
     },
-    searchedBlog: (state, action: PayloadAction<IBlogEntity>) => {
-      const index = state.blogs.findIndex(
-        (blog) => blog.id === action.payload.id
-      );
-      if (index !== -1) {
-        state.blogs[index] = action.payload;
-      } else {
-        state.blogs.push(action.payload);
-      }
+    searchedBlog: (state, action: PayloadAction<IBlogEntity[]>) => {
+      state.blogs = action.payload;
     },
   },
 });
