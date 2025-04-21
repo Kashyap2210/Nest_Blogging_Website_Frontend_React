@@ -1,17 +1,20 @@
 import { searchBlogByFilterApiCallFunction } from "@/api functions/blogs/blogs.api.calls.function";
 import { getUserProfileApiCallFunction } from "@/api functions/users/users.api.calls.functions";
+import { useAuth } from "@/context/AuthProvider";
 import { searchedBlog } from "@/redux/blogSlice";
 import { RootState } from "@/redux/store";
 import SearchIcon from "@mui/icons-material/Search";
 import { IUserProfileResponse } from "blog-common-1.0";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useLocation } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 import { Input } from "./ui/input";
 
 export default function Navbar() {
   const location = useLocation();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const user = useAuth();
   const [query, setQuery] = useState("");
   const searchedBlogFromApi = useSelector(
     (state: RootState) => state.blogs.blogs
@@ -46,10 +49,12 @@ export default function Navbar() {
   };
 
   const getUserProfile = async () => {
-    const userDetails: IUserProfileResponse =
-      await getUserProfileApiCallFunction(1);
-
-    console.log("this is the user details", userDetails);
+    if (user.user?.id) {
+      const userDetails: IUserProfileResponse =
+        await getUserProfileApiCallFunction(user.user?.id);
+      console.log("this is the user details", userDetails);
+      navigate("/api/profile", { state: userDetails });
+    }
   };
 
   return (
