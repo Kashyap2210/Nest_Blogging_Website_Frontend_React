@@ -6,6 +6,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router";
 import { Input } from "./ui/input";
 import { searchedBlog } from "@/redux/blogSlice";
+import axios from "axios";
+import { getUserProfileApiCallFunction } from "@/api functions/users/users.api.calls.functions";
+import { IUserProfileResponse } from "blog-common-1.0";
 
 export default function Navbar() {
   const location = useLocation();
@@ -43,6 +46,13 @@ export default function Navbar() {
     handleSearch();
   };
 
+  const getUserProfile = async () => {
+    const userDetails: IUserProfileResponse =
+      await getUserProfileApiCallFunction(1);
+
+    console.log("this is the user details", userDetails);
+  };
+
   return (
     <div className="h-20 w-full bg-black flex justify-center items-center">
       <form onSubmit={handleSubmit}>
@@ -61,6 +71,12 @@ export default function Navbar() {
           ></SearchIcon>
         </div>
       </form>
+      <div
+        onClick={getUserProfile}
+        className="color-white cursor-pointer text-white"
+      >
+        See Profile
+      </div>
     </div>
   );
 }
