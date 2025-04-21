@@ -77,7 +77,7 @@ export default function Navbar() {
       </form>
       <div
         onClick={getUserProfile}
-        className="color-white cursor-pointer text-white"
+        className="color-white cursor-pointer text-white ml-8"
       >
         See Profile
       </div>
