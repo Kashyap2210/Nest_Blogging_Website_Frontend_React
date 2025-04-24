@@ -72,29 +72,26 @@ export default function Navbar() {
   };
 
   return (
-    <div className="h-20 w-full  gap-8 flex justify-center items-center">
-      <form onSubmit={handleSubmit}>
-        <div className="flex items-center justify-end px-4 rounded-4xl border border-black h-12 w-full">
-          <Input
-            type="text"
-            placeholder="Search Blog"
-            className="w-60  focus-visible:ring-0 text-black focus-visible:ring-offset-0 border-none shadow-none"
-            onChange={handleChange}
-            value={query}
-            // onKeyDown={handleSubmit}
-          />
-          <SearchIcon
-            className="cursor-pointer"
-            onClick={handleSearchClick}
-          ></SearchIcon>
-        </div>
-      </form>
-      {/* <div
-        onClick={getUserProfile}
-        className="color-white cursor-pointer text-black ml-8"
-      >
-        See Profile
-      </div> */}
+    <div className="h-20 w-full flex items-center justify-around border-b-1">
+      <div className="text-xl font-semibold">MECD. Tech.</div>
+      <div>
+        <form onSubmit={handleSubmit} className="">
+          <div className="flex items-center justify-end px-4 rounded-4xl border border-black h-12 ">
+            <Input
+              type="text"
+              placeholder="Search Blog"
+              className="w-60 focus-visible:ring-0 text-black focus-visible:ring-offset-0 border-none shadow-none"
+              onChange={handleChange}
+              value={query}
+              // onKeyDown={handleSubmit}
+            />
+            <SearchIcon
+              className="cursor-pointer"
+              onClick={handleSearchClick}
+            ></SearchIcon>
+          </div>
+        </form>
+      </div>
       <div>
         <DropdownMenu modal={false}>
           <DropdownMenuTrigger className="cursor-pointer">
@@ -137,5 +134,56 @@ export default function Navbar() {
         </DropdownMenu>
       </div>
     </div>
+    //   </div>
+    // </div>
+    // <div className="h-20 w-full flex justify-center items-center">
+    //   {/* <div
+    //     onClick={getUserProfile}
+    //     className="color-white cursor-pointer text-black ml-8"
+    //   >
+    //     See Profile
+    //   </div> */}
+    //   <div>
+    //     <DropdownMenu modal={false}>
+    //       <DropdownMenuTrigger className="cursor-pointer">
+    //         <div
+    //           className={
+    //             user.user
+    //               ? "h-11 w-11 bg-emerald-300 rounded-full flex justify-center items-center"
+    //               : "h-11 w-11 bg-amber-600 rounded-full flex justify-center items-center"
+    //           }
+    //         >
+    //           MT
+    //         </div>
+    //       </DropdownMenuTrigger>
+    //       <DropdownMenuContent className="cursor-pointer">
+    //         <DropdownMenuItem onClick={getUserProfile}>
+    //           Profile
+    //         </DropdownMenuItem>
+    //         <DropdownMenuItem className="cursor-pointer">
+    //           Creators
+    //         </DropdownMenuItem>
+    //         <DropdownMenuItem className="cursor-pointer">
+    //           Trending
+    //         </DropdownMenuItem>
+    //         {user.user ? (
+    //           <DropdownMenuItem
+    //             onClick={handleLogout}
+    //             className="cursor-pointer"
+    //           >
+    //             Logout
+    //           </DropdownMenuItem>
+    //         ) : (
+    //           <DropdownMenuItem
+    //             onClick={handleLogin}
+    //             className="cursor-pointer"
+    //           >
+    //             Login
+    //           </DropdownMenuItem>
+    //         )}
+    //       </DropdownMenuContent>
+    //     </DropdownMenu>
+    //   </div>
+    // </div>
   );
 }
