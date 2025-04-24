@@ -1,19 +1,17 @@
-import { useAuth } from "@/context/AuthProvider";
 import { useNavigate } from "react-router";
 import { ColorButton } from "../styling functions/button.style.function";
-import { Button } from "./ui/button";
 
 export default function HomePage() {
   const navigate = useNavigate();
-  const { logOut, user } = useAuth();
+  // const { logOut, user } = useAuth();
 
-  const handleLogout = () => {
-    logOut();
-  };
+  // const handleLogout = () => {
+  //   logOut();
+  // };
 
-  const handleLogin = () => {
-    navigate("/api/login");
-  };
+  // const handleLogin = () => {
+  //   navigate("/api/login");
+  // };
 
   const handleCreateBlog = () => {
     navigate("/api/createBlog");
@@ -41,9 +39,9 @@ export default function HomePage() {
         <h1 className="text-4xl font-bold text-red-500">Homepage!</h1>
       </div>
       <div className="">
-        <ColorButton onClick={handleLogin} variant="contained" color="success">
+        {/* <ColorButton onClick={handleLogin} variant="contained" color="success">
           Login
-        </ColorButton>
+        </ColorButton> */}
         <br />
         <br />
         <ColorButton onClick={handleCreateBlog}>Create Blog</ColorButton>
@@ -61,16 +59,16 @@ export default function HomePage() {
         <ColorButton onClick={handleAllBlogs}>Get All Blogs</ColorButton>
         <br />
         <br />
-        <Button onClick={handleLogout} size={"lg"} className="p-4 w-40">
+        {/* <Button onClick={handleLogout} size={"lg"} className="p-4 w-40">
           Logout
         </Button>
         {/* <br />
         <br /> */}
-        {user ? (
+        {/* {user ? (
           <div>"User is logged In"</div>
         ) : (
           <div>"User is logged out"</div>
-        )}
+        )}  */}
       </div>
     </div>
   );

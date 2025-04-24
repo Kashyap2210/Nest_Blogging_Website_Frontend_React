@@ -1,5 +1,11 @@
 import { searchBlogByFilterApiCallFunction } from "@/api functions/blogs/blogs.api.calls.function";
 import { getUserProfileApiCallFunction } from "@/api functions/users/users.api.calls.functions";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { useAuth } from "@/context/AuthProvider";
 import { searchedBlog } from "@/redux/blogSlice";
 import { RootState } from "@/redux/store";
@@ -19,6 +25,15 @@ export default function Navbar() {
     (state: RootState) => state.blogs.blogs
   );
   console.log("this is the searched blog from api", searchedBlogFromApi);
+
+  const { logOut } = useAuth();
+
+  const handleLogout = () => {
+    logOut();
+  };
+  const handleLogin = () => {
+    navigate("/api/login");
+  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
@@ -57,28 +72,69 @@ export default function Navbar() {
   };
 
   return (
-    <div className="h-20 w-full bg-black flex justify-center items-center">
+    <div className="h-20 w-full  gap-8 flex justify-center items-center">
       <form onSubmit={handleSubmit}>
-        <div className="flex items-center justify-end border border-white px-4 rounded-4xl border-black h-12 w-full">
+        <div className="flex items-center justify-end px-4 rounded-4xl border border-black h-12 w-full">
           <Input
             type="text"
             placeholder="Search Blog"
-            className="w-60 border-none focus-visible:ring-0 text-white focus-visible:ring-offset-0 shadow-none"
+            className="w-60  focus-visible:ring-0 text-black focus-visible:ring-offset-0 border-none shadow-none"
             onChange={handleChange}
             value={query}
             // onKeyDown={handleSubmit}
           />
           <SearchIcon
-            className="cursor-pointer text-white"
+            className="cursor-pointer"
             onClick={handleSearchClick}
           ></SearchIcon>
         </div>
       </form>
-      <div
+      {/* <div
         onClick={getUserProfile}
-        className="color-white cursor-pointer text-white ml-8"
+        className="color-white cursor-pointer text-black ml-8"
       >
         See Profile
+      </div> */}
+      <div>
+        <DropdownMenu modal={false}>
+          <DropdownMenuTrigger className="cursor-pointer">
+            <div
+              className={
+                user.user
+                  ? "h-11 w-11 bg-emerald-300 rounded-full flex justify-center items-center"
+                  : "h-11 w-11 bg-amber-600 rounded-full flex justify-center items-center"
+              }
+            >
+              MT
+            </div>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent className="cursor-pointer">
+            <DropdownMenuItem onClick={getUserProfile}>
+              Profile
+            </DropdownMenuItem>
+            <DropdownMenuItem className="cursor-pointer">
+              Creators
+            </DropdownMenuItem>
+            <DropdownMenuItem className="cursor-pointer">
+              Trending
+            </DropdownMenuItem>
+            {user.user ? (
+              <DropdownMenuItem
+                onClick={handleLogout}
+                className="cursor-pointer"
+              >
+                Logout
+              </DropdownMenuItem>
+            ) : (
+              <DropdownMenuItem
+                onClick={handleLogin}
+                className="cursor-pointer"
+              >
+                Login
+              </DropdownMenuItem>
+            )}
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
     </div>
   );
