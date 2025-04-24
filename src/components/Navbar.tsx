@@ -7,11 +7,10 @@ import SearchIcon from "@mui/icons-material/Search";
 import { IUserProfileResponse } from "blog-common-1.0";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useLocation, useNavigate } from "react-router";
+import { useNavigate } from "react-router";
 import { Input } from "./ui/input";
 
 export default function Navbar() {
-  const location = useLocation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const user = useAuth();
