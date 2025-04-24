@@ -1,14 +1,17 @@
+import { ColorButton } from "@/styling functions/button.style.function";
 import { useNavigate } from "react-router";
-import { Button } from "./ui/button";
-import { useAuth } from "@/context/AuthProvider";
 
 export default function HomePage() {
   const navigate = useNavigate();
-  const { logOut, user } = useAuth();
+  // const { logOut, user } = useAuth();
 
-  const handleLogin = () => {
-    navigate("/api/login");
-  };
+  // const handleLogout = () => {
+  //   logOut();
+  // };
+
+  // const handleLogin = () => {
+  //   navigate("/api/login");
+  // };
 
   const handleCreateBlog = () => {
     navigate("/api/createBlog");
@@ -30,64 +33,43 @@ export default function HomePage() {
     navigate("/api/getAllBlogs");
   };
 
-  const handleLogout = () => {
-    logOut();
-  };
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen text-left border">
       <div className="mb-4">
         <h1 className="text-4xl font-bold text-red-500">Homepage!</h1>
       </div>
-      <div className="flex flex-col gap-4 mt-4">
-        <Button onClick={handleLogin} size={"lg"} className="w-full p-4 w-40">
+      <div className="">
+        {/* <ColorButton onClick={handleLogin} variant="contained" color="success">
           Login
-        </Button>
-        <Button
-          onClick={handleCreateBlog}
-          size={"lg"}
-          className="w-full p-4 w-40"
-        >
-          Create Blog
-        </Button>
-        <Button
-          onClick={handleUpdateBlog}
-          size={"lg"}
-          className="w-full p-4 w-40"
-        >
-          Update Blog
-        </Button>
-        {user && user.role === "TOAA" && (
-          <Button
-            onClick={handleCreateUser}
-            size={"lg"}
-            className="w-full p-4 w-40"
-          >
-            Create User
-          </Button>
-        )}
-        <Button
-          onClick={handleBlogById}
-          size={"lg"}
-          className="w-full p-4 w-40"
-        >
-          Get Blog By Id
-        </Button>
-        <Button
-          onClick={handleAllBlogs}
-          size={"lg"}
-          className="w-full p-4 w-40"
-        >
-          Get All Blogs
-        </Button>
-        <Button onClick={handleLogout} size={"lg"} className="w-full p-4 w-40">
+        </ColorButton> */}
+        <br />
+        <br />
+        <ColorButton onClick={handleCreateBlog}>Create Blog</ColorButton>
+        <br />
+        <br />
+        <ColorButton onClick={handleUpdateBlog}>Update Blog</ColorButton>
+        <br />
+        <br />
+        <ColorButton onClick={handleCreateUser}>Create User</ColorButton>
+        <br />
+        <br />
+        <ColorButton onClick={handleBlogById}>Get Blog By Id</ColorButton>
+        <br />
+        <br />
+        <ColorButton onClick={handleAllBlogs}>Get All Blogs</ColorButton>
+        <br />
+        <br />
+        {/* <Button onClick={handleLogout} size={"lg"} className="p-4 w-40">
           Logout
         </Button>
-        {user ? (
+        {/* <br />
+        <br /> */}
+        {/* {user ? (
           <div>"User is logged In"</div>
         ) : (
           <div>"User is logged out"</div>
-        )}
+        )}  */}
       </div>
     </div>
   );

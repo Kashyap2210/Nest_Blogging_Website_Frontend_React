@@ -29,9 +29,13 @@ const blogsSlice = createSlice({
         state.blogs.push(action.payload);
       }
     },
+    searchedBlog: (state, action: PayloadAction<IBlogEntity[]>) => {
+      state.blogs = action.payload;
+    },
   },
 });
 
-export const { addBlog, setBlogs, updateBlog } = blogsSlice.actions;
+export const { addBlog, setBlogs, updateBlog, searchedBlog } =
+  blogsSlice.actions;
 
 export default blogsSlice.reducer;

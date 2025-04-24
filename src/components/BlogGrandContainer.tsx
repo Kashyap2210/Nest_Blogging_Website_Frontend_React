@@ -7,6 +7,7 @@ import HomePage from "./Homepage";
 import IndividualBlog from "./IndividualBlog";
 import Login from "./Login";
 import UserCreate from "./UserCreate";
+import Profile from "./UserProfile";
 
 export default function BlogGrandContainer() {
   return (
@@ -19,6 +20,7 @@ export default function BlogGrandContainer() {
       <Route path="/api/getBlogById" element={<BlogById />} />
       <Route path="/api/getAllBlogs" element={<AllBlogs />} />
       <Route path="/api/readIndividualBlog" element={<IndividualBlog />} />
+      <Route path="/api/profile" element={<Profile />} />
     </Routes>
   );
 }

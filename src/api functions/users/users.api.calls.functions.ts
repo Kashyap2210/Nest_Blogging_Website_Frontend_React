@@ -1,5 +1,6 @@
+import { getJwt } from "@/helpers/helper";
 import axios, { AxiosResponse } from "axios";
-import { IUserEntity } from "blog-common-1.0";
+import { IUserEntity, IUserProfileResponse } from "blog-common-1.0";
 
 export const createUserApiCallFunction = async (
   // e: React.FormEvent<HTMLFormElement>,
@@ -10,7 +11,22 @@ export const createUserApiCallFunction = async (
     formData,
     {
       headers: {
-        "Content-Type": "multipart/form-data", // Add token to header
+        Authorization: `Bearer ${getJwt()}`,
+      },
+    }
+  );
+  return response?.data;
+};
+
+export const getUserProfileApiCallFunction = async (
+  // e: React.FormEvent<HTMLFormElement>,
+  id: number
+) => {
+  const response: AxiosResponse<IUserProfileResponse> = await axios.get(
+    `http://localhost:3000/api/users/search-user-profile/${id}`,
+    {
+      headers: {
+        Authorization: `Bearer ${getJwt()}`, // Add token to header
       },
     }
   );

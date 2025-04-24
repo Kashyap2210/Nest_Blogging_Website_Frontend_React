@@ -7,6 +7,7 @@ import {
 } from "blog-common-1.0";
 import React from "react";
 import { getJwt } from "../../helpers/helper";
+import { IEntityFilterData } from "blog-common-1.0/dist/generi.types";
 
 // 1. This function creates new blog
 export const createBlogApiCallFunction = async (
@@ -133,5 +134,25 @@ export const deleteBlogByIdApiCallFunction = async (blogId: number) => {
       console.error(error.response?.data);
     }
     console.log(error);
+  }
+};
+
+// 7. This function searches blogs
+export const searchBlogByFilterApiCallFunction = async (
+  filters: IEntityFilterData<IBlogEntity>
+) => {
+  try {
+    const response: AxiosResponse<IBlogResponse[]> = await axios.post(
+      "http://localhost:3000/api/blog/search",
+      filters,
+      {
+        headers: {
+          Authorization: `Bearer ${getJwt()}`, // Add token to header
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.log("this is the error", error);
   }
 };
