@@ -105,7 +105,7 @@ export default function Navbar() {
               MT
             </div>
           </DropdownMenuTrigger>
-          <DropdownMenuContent className="cursor-pointer">
+          <DropdownMenuContent className="cursor-pointer z-[1000]">
             <DropdownMenuItem onClick={getUserProfile}>
               Profile
             </DropdownMenuItem>
