@@ -72,7 +72,7 @@ export default function Navbar() {
   };
 
   return (
-    <div className="h-20 w-full flex items-center justify-around border-b-1">
+    <div className="fixed top-0 left-0 w-full h-20 z-[100] bg-white flex items-center justify-around border-b">
       <div className="text-xl font-semibold">MECD. Tech.</div>
       <div>
         <form onSubmit={handleSubmit} className="">

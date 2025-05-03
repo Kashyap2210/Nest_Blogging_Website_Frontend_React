@@ -7,9 +7,9 @@ export default function Profile() {
   const location = useLocation();
   const { userDetail, blogsOfUser }: IUserProfileResponse =
     location.state || {};
-//   console.log("this is name", userDetail.name);
-//   console.log("this is email", userDetail.emailId);
-//   console.log("this is phone", userDetail.contactNo);
+  //   console.log("this is name", userDetail.name);
+  //   console.log("this is email", userDetail.emailId);
+  //   console.log("this is phone", userDetail.contactNo);
   if (!userDetail.name || !userDetail.emailId || !userDetail.contactNo) {
     return (
       <div className="flex items-center justify-center h-screen text-xl text-red-600">
@@ -20,12 +20,13 @@ export default function Profile() {
   }
 
   return (
-    <div className="bg-gray-100 min-h-screen">
-      <div className="h-screen flex items-center justify-center bg-gray-100">
+    <div className="pt-20 bg-gray-100 min-h-screen">
+      {/* <div className="pt-20 bg-gray-100 min-h-screen"> */}
+      <div className="pt-20 min-h-screen bg-gray-100 flex items-center justify-center">
         <div className="max-w-5xl w-full p-8  bg-white shadow-xl rounded-2xl flex gap-12 text-gray-900">
           {/* Left Side - Profile Info */}
-          <div className="w-1/2 flex flex-col items-center gap-6">
-            <div className="w-48 h-48 bg-gray-200 rounded-full flex items-center justify-center text-gray-500 text-sm">
+          <div className="w-1/2 flex flex-col items-center gap-6 relative">
+            <div className="w-48 h-48 bg-gray-200 rounded-full flex items-center justify-center text-gray-500 text-sm relative z-[10] ">
               No Profile Image
             </div>
             <div className="text-3xl font-bold">{userDetail.name}</div>
