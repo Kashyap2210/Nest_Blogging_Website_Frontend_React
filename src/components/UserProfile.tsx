@@ -1,7 +1,9 @@
 import { PhonelinkLockOutlined } from "@mui/icons-material";
+import axios from "axios";
 import { IUserProfileResponse } from "blog-common-1.0";
 import { useLocation } from "react-router";
 import BlogList from "./BlogList";
+import { getJwt } from "@/helpers/helper";
 
 export default function Profile() {
   const location = useLocation();
@@ -24,6 +26,40 @@ export default function Profile() {
     );
   }
 
+  const getFollowers = async () => {
+    console.log("request recieved to fetch all followers of current User");
+    const followers = await axios.post(
+      `http://localhost:3000/api/followers/search`,
+      {
+        userId: [userDetail.id],
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${getJwt()}`,
+        },
+      }
+    );
+    console.log("followers", followers.data);
+  };
+
+  const getFollowing = async () => {
+    console.log(
+      "request recieved to fetch all the users current user is following"
+    );
+    const following = await axios.post(
+      `http://localhost:3000/api/followers/search`,
+      {
+        followeeUserId: [userDetail.id],
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${getJwt()}`,
+        },
+      }
+    );
+    console.log("following", following.data);
+  };
+
   return (
     <div className="pt-20 bg-gray-100 min-h-screen">
       {/* <div className="pt-20 bg-gray-100 min-h-screen"> */}
@@ -45,16 +81,22 @@ export default function Profile() {
               <span>{userDetail.contactNo}</span>
             </div>
             <div className="text-sm text-black flex items-center justify-start gap-16">
-              <div className="flex flex-col items-center justify-center">
+              <div
+                className="flex flex-col items-center justify-center px-4 "
+                onClick={getFollowers}
+              >
                 <div className="text-xl">{followersCount}</div>
-                <div className="h-8 w-full flex items-center justify-center text-2xl px-4">
+                <div className="h-8 w-full flex items-center justify-center text-2xl  cursor-pointer">
                   Followers
                 </div>
               </div>
 
-              <div className="flex flex-col items-center justify-center">
+              <div
+                className="flex flex-col items-center justify-center px-4"
+                onClick={getFollowing}
+              >
                 <div className="text-xl">{followingCount}</div>
-                <div className="h-8 w-full flex items-center justify-center text-2xl px-4">
+                <div className="h-8 w-full flex items-center justify-center text-2xl cursor-pointer">
                   Following
                 </div>
               </div>
