@@ -5,8 +5,13 @@ import BlogList from "./BlogList";
 
 export default function Profile() {
   const location = useLocation();
-  const { userDetail, blogsOfUser }: IUserProfileResponse =
-    location.state || {};
+  const {
+    userDetail,
+    blogsOfUser,
+    followersCount,
+    followingCount,
+  }: IUserProfileResponse = location.state || {};
+  console.log("this is the userDetails", userDetail);
   //   console.log("this is name", userDetail.name);
   //   console.log("this is email", userDetail.emailId);
   //   console.log("this is phone", userDetail.contactNo);
@@ -22,7 +27,7 @@ export default function Profile() {
   return (
     <div className="pt-20 bg-gray-100 min-h-screen">
       {/* <div className="pt-20 bg-gray-100 min-h-screen"> */}
-      <div className="pt-20 min-h-screen bg-gray-100 flex items-center justify-center">
+      <div className=" min-h-screen bg-gray-100 flex items-center justify-center">
         <div className="max-w-5xl w-full p-8  bg-white shadow-xl rounded-2xl flex gap-12 text-gray-900">
           {/* Left Side - Profile Info */}
           <div className="w-1/2 flex flex-col items-center gap-6 relative">
@@ -39,8 +44,20 @@ export default function Profile() {
               <PhonelinkLockOutlined />
               <span>{userDetail.contactNo}</span>
             </div>
-            <div className="text-sm text-gray-400">
-              Additional fields like address or locality can go here.
+            <div className="text-sm text-black flex items-center justify-start gap-16">
+              <div className="flex flex-col items-center justify-center">
+                <div className="text-xl">{followersCount}</div>
+                <div className="h-8 w-full flex items-center justify-center text-2xl px-4">
+                  Followers
+                </div>
+              </div>
+
+              <div className="flex flex-col items-center justify-center">
+                <div className="text-xl">{followingCount}</div>
+                <div className="h-8 w-full flex items-center justify-center text-2xl px-4">
+                  Following
+                </div>
+              </div>
             </div>
           </div>
         </div>

@@ -1,7 +1,7 @@
-import { LikeStatus } from "blog-common-1.0";
-import { IBlogListProps } from "../interfaces/blog_list_prop.interface";
-import { useNavigate } from "react-router";
 import ArrowRightIcon from "@mui/icons-material/ArrowRight";
+import { LikeStatus } from "blog-common-1.0";
+import { useNavigate } from "react-router";
+import { IBlogListProps } from "../interfaces/blog_list_prop.interface";
 
 export default function BlogList({
   blog,
