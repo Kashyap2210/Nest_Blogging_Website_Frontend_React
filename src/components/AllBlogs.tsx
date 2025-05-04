@@ -2,7 +2,6 @@ import axios from "axios";
 import { IBlogResponse } from "blog-common-1.0";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router";
 import { getAllBlogsApiCallFunction } from "../api functions/blogs/blogs.api.calls.function";
 import { setBlogs } from "../redux/blogSlice";
 import { setCommentsRedux } from "../redux/commentSlice";
@@ -10,8 +9,7 @@ import { setLikesAndDislikeEntities } from "../redux/likesAndDislikesSlice";
 import { RootState } from "../redux/store";
 import { setUsers } from "../redux/userSlice";
 import {
-  ColorButton,
-  GetAllButton,
+  GetAllButton
 } from "../styling functions/button.style.function";
 import BlogList from "./BlogList";
 
@@ -25,6 +23,7 @@ export default function AllBlogs() {
   }, [dispatch]);
 
   const blogArray = useSelector((state: RootState) => state.blogs.blogs);
+  console.log("blogArray", blogArray);
   const commentsArray = useSelector(
     (state: RootState) => state.comments.comments
   );
@@ -38,6 +37,7 @@ export default function AllBlogs() {
     try {
       const allBlogs: IBlogResponse[] | undefined =
         await getAllBlogsApiCallFunction();
+
 
       let blogs: IBlogResponse[] = [];
       if (allBlogs) {
@@ -61,14 +61,9 @@ export default function AllBlogs() {
   };
 
   return (
-    <div className="p-4 flex flex-col gap-4">
+    <div className="p-4 flex flex-col gap-4 mt-24">
       <div className="flex gap-4">
         <GetAllButton onClick={getAllBlogs}>Get All Blogs</GetAllButton>
-        <ColorButton>
-          <Link style={{ textDecoration: "none", color: "white" }} to="/api">
-            Go To HomePage
-          </Link>
-        </ColorButton>
       </div>
       <div>
         <ul>
