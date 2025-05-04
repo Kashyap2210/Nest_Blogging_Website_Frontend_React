@@ -39,9 +39,6 @@ export default function HomePage() {
         <h1 className="text-4xl font-bold text-red-500">Homepage!</h1>
       </div>
       <div className="">
-        {/* <ColorButton onClick={handleLogin} variant="contained" color="success">
-          Login
-        </ColorButton> */}
         <br />
         <br />
         <ColorButton onClick={handleCreateBlog}>Create Blog</ColorButton>
