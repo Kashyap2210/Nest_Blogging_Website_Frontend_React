@@ -1,19 +1,14 @@
+import axios from "axios";
+import { IUserFolloweeResponse } from "blog-common-1.0";
 import React from "react";
 import { Button } from "./ui/button";
 
-interface User {
-  id: number;
-  name: string;
-  emailId: string;
-  username: string;
-  profilePictureUrl?: string;
-}
 
 interface UserListModalProps {
   isOpen: boolean;
   onClose: () => void;
-  title: string; // e.g., "Followers" or "Following"
-  users: User[];
+  title: string; // e.g., "followers" or "following"
+  users: IUserFolloweeResponse[];
 }
 
 const FollowersFollowingModal: React.FC<UserListModalProps> = ({
@@ -24,13 +19,12 @@ const FollowersFollowingModal: React.FC<UserListModalProps> = ({
 }) => {
   if (!isOpen) return null;
 
-  // const { user } = useAuth();
-
-  // const onUnfollow = async (userId: number) => {
-  //   const unFollowResult = axios.delete(
-  //     `http://localhost:3000/api/followers/delete/`
-  //   );
-  // };
+  const onUnfollow = async (id: number) => {
+    const unFollowResult = await axios.delete(
+      `http://localhost:3000/api/followers/${id}`
+    );
+    console.log("unFollowResult", unFollowResult);
+  };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center  backdrop-blur-sm bg-white/50 pt-20">
@@ -67,14 +61,18 @@ const FollowersFollowingModal: React.FC<UserListModalProps> = ({
                 <div className="flex items-center justify-between w-full">
                   <div>
                     <div className="font-semibold">{user.name}</div>
-                    {/* <div className="text-sm text-gray-500">{user.emailId}</div> */}
                     <div className="text-sm text-gray-400">
-                      @{user.username}
+                      @{user.username} {user.relationId}
                     </div>
                   </div>
-                  <Button className="text-white">
-                    {title === "following" && <p className="">Unfollow</p>}
-                  </Button>
+                  {title && title === "following" && (
+                    <Button
+                      className="text-white"
+                      onClick={() => onUnfollow(user.relationId)}
+                    >
+                      Unfollow
+                    </Button>
+                  )}
                 </div>
               </li>
             ))}
