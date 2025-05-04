@@ -1,19 +1,12 @@
 import { getJwt } from "@/helpers/helper";
 import { PhonelinkLockOutlined } from "@mui/icons-material";
 import axios from "axios";
-import { IUserProfileResponse } from "blog-common-1.0";
+import { IUserFolloweeResponse, IUserProfileResponse } from "blog-common-1.0";
 import { useState } from "react";
 import { useLocation } from "react-router";
 import BlogList from "./BlogList";
 import FollowersFollowingModal from "./FollowersFollowingModal";
 
-interface User {
-  id: number;
-  name: string;
-  emailId: string;
-  username: string;
-  profilePictureUrl?: string;
-}
 
 export default function Profile() {
   const location = useLocation();
@@ -25,13 +18,10 @@ export default function Profile() {
   }: IUserProfileResponse = location.state || {};
 
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalUsers, setModalUsers] = useState<User[]>([]);
+  const [modalUsers, setModalUsers] = useState<IUserFolloweeResponse[]>([]);
   const [modalTitle, setModalTitle] = useState("");
 
   console.log("this is the userDetails", userDetail);
-  //   console.log("this is name", userDetail.name);
-  //   console.log("this is email", userDetail.emailId);
-  //   console.log("this is phone", userDetail.contactNo);
   if (!userDetail.name || !userDetail.emailId || !userDetail.contactNo) {
     return (
       <div className="flex items-center justify-center h-screen text-xl text-red-600">
@@ -46,7 +36,7 @@ export default function Profile() {
     try {
       const response = await axios.post(
         `http://localhost:3000/api/followers/search`,
-        { userId: [userDetail.id] },
+        { followeeUserId: [userDetail.id] },
         { headers: { Authorization: `Bearer ${getJwt()}` } }
       );
       setModalTitle("followers");
@@ -62,7 +52,7 @@ export default function Profile() {
     try {
       const following = await axios.post(
         `http://localhost:3000/api/followers/search`,
-        { followeeUserId: [userDetail.id] },
+        { userId: [userDetail.id] },
         { headers: { Authorization: `Bearer ${getJwt()}` } }
       );
       setModalTitle("following");
