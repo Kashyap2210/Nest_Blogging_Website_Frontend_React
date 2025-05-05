@@ -3,6 +3,7 @@ import AllBlogs from "./AllBlogs";
 import BlogById from "./BlogById";
 import BlogCreate from "./BlogCreate";
 import BlogUpdate from "./BlogUpdate";
+import Creators from "./Creators";
 import HomePage from "./Homepage";
 import IndividualBlog from "./IndividualBlog";
 import Login from "./Login";
@@ -21,6 +22,7 @@ export default function BlogGrandContainer() {
       <Route path="/api/getAllBlogs" element={<AllBlogs />} />
       <Route path="/api/readIndividualBlog" element={<IndividualBlog />} />
       <Route path="/api/profile" element={<Profile />} />
+      <Route path="/api/creators" element={<Creators />} />
     </Routes>
   );
 }

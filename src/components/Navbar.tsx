@@ -75,6 +75,11 @@ export default function Navbar() {
     navigate("/api");
   };
 
+  const navigateToCreators = () => {
+    console.log("navigate...");
+    navigate("/api/creators");
+  };
+
   return (
     <div className="fixed top-0 left-0 w-full h-20 z-[100] bg-white flex items-center justify-around border-b">
       <div
@@ -118,7 +123,10 @@ export default function Navbar() {
             <DropdownMenuItem onClick={getUserProfile}>
               Profile
             </DropdownMenuItem>
-            <DropdownMenuItem className="cursor-pointer">
+            <DropdownMenuItem
+              className="cursor-pointer"
+              onClick={navigateToCreators}
+            >
               Creators
             </DropdownMenuItem>
             <DropdownMenuItem className="cursor-pointer">
