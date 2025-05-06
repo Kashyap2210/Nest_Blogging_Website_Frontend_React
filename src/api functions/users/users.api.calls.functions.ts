@@ -32,3 +32,17 @@ export const getUserProfileApiCallFunction = async (
   );
   return response?.data;
 };
+
+export const searchUserByFilterApiCallFunction = async () =>
+  {
+    const response: AxiosResponse<Partial<IUserEntity>[]> = await axios.post(
+      `http://localhost:3000/api/users/search`,
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${getJwt()}`, // Add token to header
+        },
+      }
+    );
+    return response?.data;
+  };
