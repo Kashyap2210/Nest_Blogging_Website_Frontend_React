@@ -1,15 +1,21 @@
+import { useAuth } from "@/context/AuthProvider";
 import { getJwt } from "@/helpers/helper";
 import { PhonelinkLockOutlined } from "@mui/icons-material";
-import axios from "axios";
-import { IUserFolloweeResponse, IUserProfileResponse } from "blog-common-1.0";
-import { useState } from "react";
-import { useLocation } from "react-router";
+import axios, { AxiosResponse } from "axios";
+import {
+  IUserFolloweeEntity,
+  IUserFolloweeResponse,
+  IUserProfileResponse,
+} from "blog-common-1.0";
+import { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router";
 import BlogList from "./BlogList";
 import FollowersFollowingModal from "./FollowersFollowingModal";
-
+import { Button } from "./ui/button";
 
 export default function Profile() {
   const location = useLocation();
+  const navigate = useNavigate();
   const {
     userDetail,
     blogsOfUser,
@@ -20,6 +26,34 @@ export default function Profile() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalUsers, setModalUsers] = useState<IUserFolloweeResponse[]>([]);
   const [modalTitle, setModalTitle] = useState("");
+  const [isFollowing, setIsFollowing] = useState<Boolean>(false);
+  const { user } = useAuth();
+  useEffect(() => {
+    if (!user) {
+      alert("Please Login");
+    }
+    const checkIfUserIsFollowed = async () => {
+      const followeeEntity: AxiosResponse<IUserFolloweeEntity[]> =
+        await axios.post(
+          `http://localhost:3000/api/followers/search`,
+          {
+            userId: [userDetail.id],
+            followeeUserId: [user?.id],
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${getJwt()}`,
+            },
+          }
+        );
+      if (followeeEntity.data && followeeEntity.data.length > 0) {
+        setIsFollowing(true);
+      }
+    };
+    if (user && user.id && userDetail && userDetail.id) {
+      checkIfUserIsFollowed();
+    }
+  }, [user?.id, userDetail?.id]);
 
   console.log("this is the userDetails", userDetail);
   if (!userDetail.name || !userDetail.emailId || !userDetail.contactNo) {
@@ -63,6 +97,54 @@ export default function Profile() {
     }
   };
 
+  const followUserFromProfile = async () => {
+    try {
+      if (!user) {
+        alert("Please Login");
+        navigate("/api/login");
+      }
+      const followCurrentUserFromProfile = await axios.post(
+        `http://localhost:3000/api/followers`,
+        {
+          userId: userDetail.id,
+          followeeUserId: user?.id,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${getJwt()}`,
+          },
+        }
+      );
+      console.log("followCurrentUserFromProfile", followCurrentUserFromProfile);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const unFollowUserFromProfile = async () => {
+    try {
+      if (!user) {
+        alert("Please Login");
+        navigate("/api/login");
+      }
+      const followCurrentUserFromProfile = await axios.post(
+        `http://localhost:3000/api/followers/delete`,
+        {
+          userId: [userDetail.id],
+          followeeUserId: [user?.id],
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${getJwt()}`,
+          },
+        }
+      );
+      console.log("followCurrentUserFromProfile", followCurrentUserFromProfile);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <div className="pt-20 bg-gray-100 min-h-screen">
       {/* <div className="pt-20 bg-gray-100 min-h-screen"> */}
@@ -83,7 +165,7 @@ export default function Profile() {
           </div>
 
           {/* Right Side - Additional Info */}
-          <div className="w-1/2 flex flex-col justify-center gap-6">
+          <div className="w-1/2 flex flex-col justify-center gap-6 items-center px-22">
             <div className="flex items-center gap-3 text-lg">
               <PhonelinkLockOutlined />
               <span>{userDetail.contactNo}</span>
@@ -109,6 +191,21 @@ export default function Profile() {
                 </div>
               </div>
             </div>
+            {isFollowing ? (
+              <Button
+                className="w-full cursor-pointer"
+                onClick={unFollowUserFromProfile}
+              >
+                Unfollow @{userDetail.username}
+              </Button>
+            ) : (
+              <Button
+                className="w-full cursor-pointer"
+                onClick={followUserFromProfile}
+              >
+                Follow @{userDetail.username}
+              </Button>
+            )}
           </div>
         </div>
       </div>
