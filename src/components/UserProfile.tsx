@@ -23,6 +23,9 @@ export default function Profile() {
     followingCount,
   }: IUserProfileResponse = location.state || {};
 
+  const [followers, _setFollowers] = useState<number>(followersCount);
+  const [following, setFollowing] = useState<number>(followingCount);
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalUsers, setModalUsers] = useState<IUserFolloweeResponse[]>([]);
   const [modalTitle, setModalTitle] = useState("");
@@ -53,14 +56,13 @@ export default function Profile() {
     if (user && user.id && userDetail && userDetail.id) {
       checkIfUserIsFollowed();
     }
-  }, [user?.id, userDetail?.id]);
+  }, [user?.id, userDetail?.id, followers, following]);
 
   console.log("this is the userDetails", userDetail);
   if (!userDetail.name || !userDetail.emailId || !userDetail.contactNo) {
     return (
       <div className="flex items-center justify-center h-screen text-xl text-red-600">
-        ⚠️ User details not available. Please navigate from the appropriate
-        page.
+        User details not available. Please navigate from the appropriate page.
       </div>
     );
   }
@@ -116,6 +118,7 @@ export default function Profile() {
         }
       );
       console.log("followCurrentUserFromProfile", followCurrentUserFromProfile);
+      setFollowing((previous) => previous + 1);
     } catch (error) {
       console.log(error);
     }
@@ -140,10 +143,13 @@ export default function Profile() {
         }
       );
       console.log("followCurrentUserFromProfile", followCurrentUserFromProfile);
+      setFollowing((previous) => previous - 1);
     } catch (error) {
       console.log(error);
     }
   };
+  console.log("userDetail.id", userDetail.id);
+  console.log("user.id", user?.id);
 
   return (
     <div className="pt-20 bg-gray-100 min-h-screen">
@@ -175,7 +181,7 @@ export default function Profile() {
                 className="flex flex-col items-center justify-center px-4 "
                 onClick={getFollowers}
               >
-                <div className="text-xl">{followersCount}</div>
+                <div className="text-xl">{followers}</div>
                 <div className="h-8 w-full flex items-center justify-center text-2xl  cursor-pointer">
                   Followers
                 </div>
@@ -185,27 +191,29 @@ export default function Profile() {
                 className="flex flex-col items-center justify-center px-4"
                 onClick={getFollowing}
               >
-                <div className="text-xl">{followingCount}</div>
+                <div className="text-xl">{following}</div>
                 <div className="h-8 w-full flex items-center justify-center text-2xl cursor-pointer">
                   Following
                 </div>
               </div>
             </div>
-            {isFollowing ? (
-              <Button
-                className="w-full cursor-pointer"
-                onClick={unFollowUserFromProfile}
-              >
-                Unfollow @{userDetail.username}
-              </Button>
-            ) : (
-              <Button
-                className="w-full cursor-pointer"
-                onClick={followUserFromProfile}
-              >
-                Follow @{userDetail.username}
-              </Button>
-            )}
+            {user &&
+              userDetail.id !== user.id &&
+              (isFollowing && user && userDetail.id !== user.id ? (
+                <Button
+                  className="w-full cursor-pointer"
+                  onClick={unFollowUserFromProfile}
+                >
+                  Unfollow @{userDetail.username}
+                </Button>
+              ) : (
+                <Button
+                  className="w-full cursor-pointer"
+                  onClick={followUserFromProfile}
+                >
+                  Follow @{userDetail.username}
+                </Button>
+              ))}
           </div>
         </div>
       </div>
