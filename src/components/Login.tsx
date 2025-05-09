@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/context/AuthProvider";
-import { Input } from "@heroui/react";
+import { Input } from "@heroui/input";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import axios, { AxiosResponse } from "axios";
 import { IUserLoginResponse } from "blog-common-1.0";
@@ -76,7 +76,7 @@ export default function Login() {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen gap-8 bg-gradient-to-tr from-dutchWine  to-wine">
       {/* <div className="bg-white rounded-sm shadow-2xl shadow-gray-600/20"> */}
-      <div className="bg-white rounded-sm rounded-xl border border-gray-300 shadow-inner">
+      <div className="bg-white  rounded-xl border border-gray-300 shadow-inner">
         <form
           noValidate
           onSubmit={handleSubmit}
