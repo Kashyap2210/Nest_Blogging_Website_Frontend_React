@@ -1,5 +1,5 @@
+import { ColorButton } from "@/styling functions/button.style.function";
 import { useNavigate } from "react-router";
-import { ColorButton } from "../styling functions/button.style.function";
 
 export default function HomePage() {
   const navigate = useNavigate();
@@ -32,6 +32,7 @@ export default function HomePage() {
   const handleAllBlogs = () => {
     navigate("/api/getAllBlogs");
   };
+
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen text-left border">

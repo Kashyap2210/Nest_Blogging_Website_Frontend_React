@@ -56,7 +56,7 @@ export default function BlogById() {
 
     const response = await handleSubmitForBlogGetById(e, formData.blogId);
 
-    console.log("this is the user", user);
+    // console.log("this is the user", user);
 
     if (response) {
       dispatch(setBlogs([response.blog]));
@@ -150,7 +150,9 @@ export default function BlogById() {
               {blog.title}
             </div>
             <div className="h-12 mb-8 scroll-auto">{blog.keywords}</div>
-            <div className="text-justify mt-4">{blog.content}</div>
+            <div className="text-justify mt-4 whitespace-pre-wrap">
+              {blog.content}
+            </div>
             <div className="h-8 flex justify-start items-center text-2xl mt-4">
               <span className="">Written By, </span>
               <span className="italic font-semibold">&nbsp;{blog.author}</span>
@@ -175,10 +177,7 @@ export default function BlogById() {
           ))}
         <div className="flex gap-4 mb-8">
           {isCommentFormVisible && (
-            <CommentForm
-              blogId={blog?.id}
-              // onNewCommentCreate={handleNewComment}
-            ></CommentForm>
+            <CommentForm blogId={blog?.id}></CommentForm>
           )}
           <ColorButton
             onClick={() => setIsCommentFormVisible(!isCommentFormVisible)}

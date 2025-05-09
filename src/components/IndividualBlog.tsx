@@ -30,16 +30,26 @@ export default function IndividualBlog() {
   const allComments = useSelector(
     (state: RootState) => state.comments.comments
   );
+  // console.log("this are all comments from redux", allComments);
 
   const likesAndDislikeEntities = useSelector(
     (state: RootState) => state.likesAndDislikes.likesAndDislikeEntities
   );
 
-  const { blog, likes }: IBlogListProps = location.state || {};
+  const {
+    blog,
+    likes,
+    comments: passedComments,
+  }: IBlogListProps = location.state || {};
 
-  const commentsRelevantToBlog = allComments.filter(
-    (comment) => comment.blogId === blog.id
-  );
+  const commentsToShow = passedComments?.length
+    ? passedComments
+    : allComments.filter((comment) => comment.blogId === blog.id);
+
+  // console.log("this is th e location.state", location.state);
+
+  // console.log("this is the blogs and likes from individual blog", blog);
+
   const [isCommentFormVisible, setIsCommentFormVisible] = useState(false);
   const [newComment, setNewComment] = useState<ICommentCreateDto>({
     text: "",
@@ -139,7 +149,7 @@ export default function IndividualBlog() {
             {blog.title}
           </div>
           <div className="h-12 ">{blog.keywords}</div>
-          <div className="text-justify">{blog.content}</div>
+          <div className="text-justify whitespace-pre-wrap">{blog.content}</div>
           <div className="h-8 flex justify-start items-center text-2xl mt-4">
             <span className="">Written By, </span>
             <span className="italic font-semibold">&nbsp;{blog.author}</span>
@@ -148,8 +158,8 @@ export default function IndividualBlog() {
       )}
 
       <h2 className="mb-2 text-3xl font-semibold">Comments</h2>
-      {commentsRelevantToBlog &&
-        commentsRelevantToBlog.map((mapping) => (
+      {commentsToShow &&
+        commentsToShow.map((mapping) => (
           <div className="mb-4" key={mapping.id}>
             <Comments
               commentId={mapping.id}

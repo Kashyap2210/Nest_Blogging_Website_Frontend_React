@@ -1,23 +1,39 @@
+import { Input } from "@heroui/react";
+import { TextField } from "@mui/material";
 import axios from "axios";
-import { IBlogEntity, IBlogUpdateDto } from "blog-common-1.0";
+import { IBlogEntity, IBlogResponse, IBlogUpdateDto } from "blog-common-1.0";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router";
-import { updateBlogByIdApiCallFunction } from "../api functions/blogs/blogs.api.calls.function";
+import { Link, useNavigate } from "react-router";
+import {
+  getBlogByIdApiCallFunction,
+  updateBlogByIdApiCallFunction,
+} from "../api functions/blogs/blogs.api.calls.function";
 import { getJwt } from "../helpers/helper";
 import { updateBlog } from "../redux/blogSlice";
+import { setBlogForIndividualBlog } from "../redux/individualBlogSlice";
 import { RootState } from "../redux/store";
-import { ColorButton } from "../styling functions/button.style.function";
+import { Button } from "./ui/button";
 
 export default function BlogUpdate() {
   const [formData, setFormData] = useState<IBlogUpdateDto | null>(null);
-  const [updatedBlog] = useSelector((state: RootState) => state.blogs.blogs);
   const [id, setId] = useState<number>();
+  const updatedBlog = useSelector((state: RootState) =>
+    id !== undefined
+      ? state.blogs.blogs.find((blog) => blog.id === id)
+      : undefined
+  );
+  // console.log("this is the updatedBlog", updatedBlog);
+  const [errors, setErrors] = useState({
+    id: false,
+  });
 
   const dispatch = useDispatch();
   React.useEffect(() => {
     getJwt();
   }, []);
+
+  const navigate = useNavigate();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -45,7 +61,9 @@ export default function BlogUpdate() {
     );
 
     if (!id) {
-      alert("Please Provide Valid Id");
+      setErrors({
+        id: true,
+      });
       return;
     }
 
@@ -55,7 +73,20 @@ export default function BlogUpdate() {
         cleanedFormData
       );
 
+      const responseU: IBlogResponse | undefined =
+        await getBlogByIdApiCallFunction(e, id);
+      // console.log("this is the updated blog in IBLogResponse form", responseU);
+
       dispatch(updateBlog(response));
+      if (responseU) dispatch(setBlogForIndividualBlog([responseU]));
+
+      navigate("/api/readIndividualBlog", {
+        state: {
+          blog: responseU?.blog,
+          likes: responseU?.likes,
+          comments: responseU?.comments,
+        },
+      });
     } catch (error) {
       if (axios.isAxiosError(error)) {
         console.error(error.response?.data);
@@ -66,54 +97,108 @@ export default function BlogUpdate() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen text-left">
-      <h2 className="text-4xl font-bold text-red-500 mb-4">
-        Update specific blog with Id
-      </h2>
+    // <div className="flex flex-col items-center justify-center min-h-screen text-left">
+    <div className="p-4 min-h-screen text-left">
+      {/* <h2 className="text-4xl font-bold text-red-500 mb-4">Update Blog</h2> */}
       <div>
         <form
           onSubmit={handleSubmit}
-          className="border p-8 flex flex-col gap-8 mb-8"
+          className="px-4 pt-4 mb-8 flex flex-col gap-6 items-start justify-center"
         >
-          <input
+          <Input
             type="number"
             name="id"
-            placeholder="Blog ID"
-            value={id || ""}
+            placeholder={
+              errors.id ? "Id is required to update blog" : "Enter id of blog."
+            }
+            value={id !== undefined ? id.toString() : ""}
             onChange={handleIdChange} // Separate handler for ID
-            className="border px-4"
+            className={
+              errors.id
+                ? "border border-red-700 border-2 rounded-md h-12"
+                : "border border-wine rounded-md h-12"
+            }
           />
-          <input
+          {/* <input
             type="text"
             name="title"
             placeholder="Blog title"
             value={formData?.title}
             onChange={handleChange}
             className="border px-4"
-          />
-          <input
+          /> */}
+          <Input
+            type="title"
+            placeholder={"Enter title of blog"}
+            name="title"
+            value={formData?.title}
+            onChange={handleChange}
+            className={"border border-wine rounded-md h-12"}
+          ></Input>
+          {/* <input
             type="text"
             name="content"
             placeholder="Blog content"
             value={formData?.content}
             onChange={handleChange}
             className="border px-4"
+          /> */}
+          <TextField
+            id="filled-multiline-static"
+            multiline
+            name="content"
+            rows={20}
+            placeholder={"What's on ya mind?"}
+            variant="filled"
+            value={formData?.content}
+            onChange={handleChange}
+            fullWidth
+            sx={{
+              backgroundColor: "white", // Ensures white background
+              "& .MuiFilledInput-root": {
+                backgroundColor: "white", // Overrides default grey
+                border: "1px solid #722f37",
+                borderRadius: "0.375rem", // Makes it look cleaner
+                boxShadow: "none", // Removes any unwanted shadow
+                padding: "1rem",
+              },
+              "& .Mui-focused": {
+                backgroundColor: "white !important",
+                border: "1px solid #722f37",
+              },
+              "& .MuiInputBase-root:hover": {
+                backgroundColor: "white",
+              },
+              "& .MuiFilledInput-underline:before, & .MuiFilledInput-underline:after":
+                {
+                  borderBottom: "none !important", // Removes the bottom border
+                },
+            }}
           />
-          <input
+
+          {/* <input
             type="text"
             name="keywords"
             placeholder="Blog keywords"
             value={formData?.keywords}
             onChange={handleChange}
             className="border px-4"
-          />
-          <ColorButton type="submit">Update Blog</ColorButton>
+          /> */}
+          <Input
+            type="text"
+            placeholder="Help people find your blog more easily by KEYWORDS?"
+            name="keywords"
+            value={formData?.keywords}
+            onChange={handleChange}
+            className="border border-wine rounded-md h-12"
+          ></Input>
+          <Button type="submit" className="customButton w-40">
+            Update Blog
+          </Button>
+          <Button className="customButton w-40 block text-center">
+            <Link to="/api">Go To HomePage</Link>
+          </Button>
         </form>
-        <ColorButton className="w-full block text-center">
-          <Link style={{ textDecoration: "none", color: "white" }} to="/api">
-            Go To HomePage
-          </Link>
-        </ColorButton>
       </div>
       {updatedBlog && (
         <div>
