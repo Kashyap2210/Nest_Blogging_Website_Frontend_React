@@ -144,6 +144,7 @@ export default function Profile() {
       );
       console.log("followCurrentUserFromProfile", followCurrentUserFromProfile);
       setFollowing((previous) => previous - 1);
+      setIsFollowing(false);
     } catch (error) {
       console.log(error);
     }
